@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/itemMainActivity"
+        android:title="Home"
+        android:icon="@drawable/home_24dp_1f1f1f_fill0_wght400_grad0_opsz24"/>
+    <item android:id="@+id/itemActivity2"
+        android:title="Favourites"
+        android:icon="@drawable/favorite_24dp_1f1f1f_fill0_wght400_grad0_opsz24"/>
+    <item android:id="@+id/itemActivity3"
+        android:title="Playlists"
+        android:icon="@drawable/playlist"/>
+</menu>
