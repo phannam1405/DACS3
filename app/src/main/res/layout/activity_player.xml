@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@drawable/background_player"
     tools:context=".PlayerActivity">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/back_ic"
+            android:src="@drawable/icon_back"
             android:contentDescription="@string/back_btn"
             />
         <TextView
@@ -39,7 +40,7 @@
             android:layout_marginEnd="5dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/favourites_btn"
-            android:src="@drawable/favorite_24dp_1f1f1f_fill0_wght400_grad0_opsz24"/>
+            android:src="@drawable/icon_heart"/>
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -70,21 +71,21 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="wrap_content"
-            app:icon="@drawable/pre_song"
+            app:icon="@drawable/icon_pre_song"
             app:iconSize="40dp"
 
             android:layout_height="wrap_content"/>
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/pause"
+            app:icon="@drawable/icon_pause"
             app:iconSize="50dp"
             app:shapeAppearanceOverlay="@style/curved"
             android:layout_marginHorizontal="25dp"/>
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:icon="@drawable/next_song"
+            app:icon="@drawable/icon_next_song"
             app:iconSize="40dp"/>
     </LinearLayout>
     
@@ -129,28 +130,28 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/repeat_btn"
             android:layout_weight="1"
-            android:src="@drawable/repeat"/>
+            android:src="@drawable/icon_repeat"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/equalizer_btn"
             android:layout_weight="1"
-            android:src="@drawable/equalizer"/>
+            android:src="@drawable/icon_equalizer"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/timer_btn"
             android:layout_weight="1"
-            android:src="@drawable/timer"/>
+            android:src="@drawable/icon_timer"/>
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:contentDescription="@string/share_btn"
             android:layout_weight="1"
-            android:src="@drawable/share"/>
+            android:src="@drawable/icon_share"/>
     </LinearLayout>
 
 </LinearLayout>
