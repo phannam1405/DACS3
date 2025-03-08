@@ -1,0 +1,33 @@
+package com.example.dacs3
+
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
+
+class Adapter_Favourite (val activity: FavouriteActivity, val list: List<Outdata_Fav>) : ArrayAdapter<Outdata_Fav>(activity, R.layout.custom_favourite_list){
+    override fun getCount(): Int {
+        return list.size // Ve danh sach yeu thich cua nguoi dung
+    }
+
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
+        // Chuyen xml thanh giao dien
+        val context = activity.layoutInflater
+
+        val rowView = context.inflate(R.layout.custom_favourite_list, null)
+
+        val images = rowView.findViewById<ImageView>(R.id.imgMusic)
+        val title = rowView.findViewById<TextView>(R.id.txtTitle)
+        val singer = rowView.findViewById<TextView>(R.id.txtSinger)
+        val time = rowView.findViewById<TextView>(R.id.txtTime)
+
+        title.text = list[position].title
+        singer.text = list[position].singer
+        time.text = list[position].time
+        images.setImageResource(list[position].image)
+
+        return rowView
+    }
+}

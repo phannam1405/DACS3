@@ -96,7 +96,7 @@
                 android:text="REGISTER" />
 
             <TextView
-                android:id="@+id/txtCA"
+                android:id="@+id/txtRe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/lavender"

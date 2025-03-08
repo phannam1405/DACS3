@@ -18,5 +18,9 @@ class LoginActivity : AppCompatActivity() {
             val i1 = Intent(this, RegisterActivity::class.java)
             startActivity(i1)
         }
+        binding.buttonLogin.setOnClickListener{
+            val i1 = Intent(this, MainActivity::class.java)
+            startActivity(i1)
+        }
     }
 }

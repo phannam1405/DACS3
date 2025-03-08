@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
-    <style name="Base.Theme.DACS3" parent="Theme.Material3.DayNight">
+    <style name="Base.Theme.DACS3" parent="Theme.MaterialComponents.DayNight">
     </style>
 
     <style name="Theme.DACS3" parent="Base.Theme.DACS3" />
