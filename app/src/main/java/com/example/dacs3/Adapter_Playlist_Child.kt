@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 
-class Adapter_Favourite (val activity: Activity, val list: List<Outdata_Fav>) : ArrayAdapter<Outdata_Fav>(activity, R.layout.custom_favourite_list){
+class Adapter_Playlist_Child(val activity: Activity, val list: List<Outdata_playlist_child>): ArrayAdapter<Outdata_playlist_child>(activity, R.layout.custom_playlist_child_list) {
     override fun getCount(): Int {
         return list.size // Ve danh sach yeu thich cua nguoi dung
     }
@@ -17,7 +17,7 @@ class Adapter_Favourite (val activity: Activity, val list: List<Outdata_Fav>) : 
         // Chuyen xml thanh giao dien
         val context = activity.layoutInflater
 
-        val rowView = context.inflate(R.layout.custom_favourite_list, null)
+        val rowView = context.inflate(R.layout.custom_playlist_child_list, null)
 
         val images = rowView.findViewById<ImageView>(R.id.imgMusic)
         val title = rowView.findViewById<TextView>(R.id.txtTitle)

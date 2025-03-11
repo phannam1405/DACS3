@@ -17,12 +17,12 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="36dp"
-        android:text="FAVOURITE SONGS"
+        android:text="PLAYLIST SONGS"
         android:textColor="@color/purple_700"/>
 
     <ListView
         android:layout_width="match_parent"
-        android:id="@+id/lvMusicFav"
+        android:id="@+id/lvPlayList_child"
         android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -16,13 +16,13 @@ class FavouriteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
+
         supportActionBar?.hide()
         // Khai bao danh sach yeu thich cua nguoi dung
         val list = mutableListOf<Outdata_Fav>()
         list.add(Outdata_Fav(R.drawable.singer_minh_gay, "Bạc Phận", "Minh Gay", "4:32"))
 
         adapter_fav = Adapter_Favourite(this, list)
-        val listViewFav = findViewById<ListView>(R.id.lvMusicFav)
         binding.lvMusicFav.adapter = adapter_fav
     }
 }
