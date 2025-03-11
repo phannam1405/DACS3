@@ -65,7 +65,7 @@
                 android:drawableRight="@drawable/icon_lock"
                 android:drawablePadding="8dp"
                 android:hint="Password"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:padding="8dp"
                 android:textColor="@color/lavender"
                 android:textSize="20dp" />
