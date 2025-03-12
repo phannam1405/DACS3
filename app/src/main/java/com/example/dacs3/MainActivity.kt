@@ -1,5 +1,6 @@
 package com.example.dacs3
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.itemPlaylist -> {
-                    val intent = Intent(this, PlaylistActivity::class.java)
+                    val intent = Intent(this, PlayerActivity::class.java)
                     startActivity(intent)
                     true
                 }
