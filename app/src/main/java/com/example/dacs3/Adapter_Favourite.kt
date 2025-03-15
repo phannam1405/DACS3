@@ -17,7 +17,7 @@ class Adapter_Favourite (val activity: Activity, val list: List<Outdata_Fav>) : 
         // Chuyen xml thanh giao dien
         val context = activity.layoutInflater
 
-        val rowView = context.inflate(R.layout.custom_favourite_list, null)
+        val rowView = context.inflate(R.layout.custom_favourite_list, parent,false)
 
         val images = rowView.findViewById<ImageView>(R.id.imgMusic)
         val title = rowView.findViewById<TextView>(R.id.txtTitle)

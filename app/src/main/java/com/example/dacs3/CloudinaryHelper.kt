@@ -6,9 +6,9 @@ import com.cloudinary.Cloudinary
 object CloudinaryHelper {
     private val cloudinary = Cloudinary(
         mapOf(
-            "cloud_name" to "d1lexacvx",
-            "api_key" to "813933897632645",
-            "api_secret" to "pKN1zj1ziLlY-85X4QKAQpySVPg"
+            "cloud_name" to "drqbcsyqj",
+            "api_key" to "427458218633888",
+            "api_secret" to "XpLnpFWk_PdP_gAe9FDiewY49_I"
         )
     )
 
