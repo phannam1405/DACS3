@@ -1,5 +1,6 @@
 package com.example.dacs3
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,14 +25,29 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) :
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = list[position]
+
+        // Kiểm tra dữ liệu bài hát
+        Log.d("Adapter", "🔄 Đang load bài hát: ${song.song_name}")
+        Log.d("Adapter", "🔗 Link ảnh: ${song.image}")
+
         Glide.with(holder.itemView.context)
             .load(song.image)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.error)
+            .placeholder(R.drawable.placeholder) // Ảnh loading tạm
+            .error(R.drawable.error) // Ảnh lỗi nếu load thất bại
             .into(holder.imgSong)
 
         holder.txtSongName.text = song.song_name
+
+        // Kiểm tra nếu ImageView hoặc TextView bị null
+        if (holder.imgSong == null) {
+            Log.e("Adapter", "⚠️ ImageView (imgSong) bị null!")
+        }
+        if (holder.txtSongName == null) {
+            Log.e("Adapter", "⚠️ TextView (txtSongName) bị null!")
+        }
     }
+
+
 
     override fun getItemCount(): Int = list.size
 }

@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         sl = arrayListOf<Outdata_Song_List>()
         layThongTinKhoNhac()
 
-        Glide.with(this).load("https://res.cloudinary.com/drqbcsyqj/image/upload/v1741861229/HongNhan_bqbzj7.jpg").into(binding.imageView2)
 
         // Drawer Navigation
         toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open_nav, R.string.close_nav)
@@ -76,30 +75,48 @@ class MainActivity : AppCompatActivity() {
 
     // Lấy dữ liệu bài hát từ Firebase
     private fun layThongTinKhoNhac() {
-        dbref = FirebaseDatabase.getInstance().getReference("Song")
+        Log.d("Firebase", "Hàm layThongTinKhoNhac() đã được gọi")
+        dbref = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
+            .getReference("Song")
+
         dbref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d("Firebase", " Đã nhận dữ liệu từ Firebase")
+
                 sl.clear()
                 if (snapshot.exists()) {
-                    for (songSnapshot in snapshot.children) {
-                        val song_name = songSnapshot.child("song_name").getValue(String::class.java)
-                        val image = songSnapshot.child("image").getValue(String::class.java)
-                        val song = Outdata_Song_List(image, song_name)
-                        sl.add(song)
+                    for (musicSnapshot in snapshot.children) {
+                        val song_name = musicSnapshot.child("song_name").getValue(String::class.java)
+                        val image = musicSnapshot.child("image").getValue(String::class.java)
+
+                        // Kiểm tra dữ liệu lấy được
+                        Log.d("Firebase", "Lấy được: song_name=${song_name}, image=${image}")
+
+                        if (song_name != null && image != null) {
+                            val song = Outdata_Song_List(image, song_name)
+                            sl.add(song)
+                        }
                     }
+
+                    // Kiểm tra số bài hát nhận được
+                    Log.d("RecyclerView", "Số bài hát lấy được: ${sl.size}")
+
+                    // Cập nhật RecyclerView
                     val adapter = Adapter_Song_List(sl)
                     binding.rvSongList.adapter = adapter
-                    Toast.makeText(this@MainActivity, "Có dữ liệu", Toast.LENGTH_SHORT).show()
-                }else {
-                   Toast.makeText(this@MainActivity, "Không có dữ liệu", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.d("Firebase", " Không có dữ liệu trong Firebase")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
+                Log.e("Firebase", " Lỗi lấy dữ liệu: ${error.message}")
             }
         })
     }
+
+
+
 
 
     // Xử lý sự kiện bấm nút Menu trong ActionBar
