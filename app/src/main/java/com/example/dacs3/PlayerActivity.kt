@@ -4,13 +4,13 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.dacs3.databinding.ActivityPlayerBinding
 import java.io.IOException
 
 class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var binding: ActivityPlayerBinding
-    private val musicUrl = "https://res.cloudinary.com/dl1exacvx/video/upload/v1741794541/audio_test_t77jxj.mp3"
     private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,11 +18,20 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val image_singer = intent.getStringExtra("singer")
+        val audio = intent.getStringExtra("audio")
+
+
+        Glide.with(this)
+            .load(image_singer)
+            .into(binding.imgSong)
+
         mediaPlayer = MediaPlayer()
         try {
             mediaPlayer?.apply {
-                setDataSource(musicUrl) // Lấy nhạc từ Cloudinary
-                prepareAsync() // Chuẩn bị phát nhạc (không chặn UI)
+                setDataSource(audio) // Lấy nhạc từ Cloudinary
+                prepareAsync() // Chuẩn bị phát nhạc
                 setOnPreparedListener {
                     start()
                     binding.seekBar.max = duration // Cập nhật max cho SeekBar

@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // Cấu hình RecyclerView
-        binding.rvSongList.layoutManager = LinearLayoutManager(this)
+        binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvSongList.setHasFixedSize(true)
         // Khởi tạo danh sách bài hát
         sl = arrayListOf<Outdata_Song_List>()
@@ -81,39 +82,47 @@ class MainActivity : AppCompatActivity() {
 
         dbref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d("Firebase", " Đã nhận dữ liệu từ Firebase")
+                Log.d("Firebase", "Đã nhận dữ liệu từ Firebase")
 
                 sl.clear()
                 if (snapshot.exists()) {
                     for (musicSnapshot in snapshot.children) {
                         val song_name = musicSnapshot.child("song_name").getValue(String::class.java)
                         val image = musicSnapshot.child("image").getValue(String::class.java)
-
-                        // Kiểm tra dữ liệu lấy được
-                        Log.d("Firebase", "Lấy được: song_name=${song_name}, image=${image}")
+                        val audio = musicSnapshot.child("audio").getValue(String::class.java)
+                        val singer = musicSnapshot.child("singer").getValue(String::class.java)
 
                         if (song_name != null && image != null) {
-                            val song = Outdata_Song_List(image, song_name)
+                            val song = Outdata_Song_List(song_name, image, audio, singer)
                             sl.add(song)
                         }
                     }
 
-                    // Kiểm tra số bài hát nhận được
-                    Log.d("RecyclerView", "Số bài hát lấy được: ${sl.size}")
-
                     // Cập nhật RecyclerView
                     val adapter = Adapter_Song_List(sl)
                     binding.rvSongList.adapter = adapter
+
+                    // Xử lý sự kiện khi nhấn vào bài hát
+                    adapter.setOnItemClickListenner(object : Adapter_Song_List.onItemClickListenner {
+                        override fun onItemClick(position: Int) {
+                            val intent = Intent(this@MainActivity, PlayerActivity::class.java)
+                            intent.putExtra("singer", sl[position].singer)
+                            intent.putExtra("audio", sl[position].audio)
+                            intent.putExtra("song_name", sl[position].song_name)
+                            startActivity(intent)
+                        }
+                    })
                 } else {
-                    Log.d("Firebase", " Không có dữ liệu trong Firebase")
+                    Log.d("Firebase", "Không có dữ liệu trong Firebase")
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Firebase", " Lỗi lấy dữ liệu: ${error.message}")
+                Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
             }
         })
     }
+
 
 
 

@@ -9,10 +9,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class Adapter_Song_List(private val list: List<Outdata_Song_List>) :
-    RecyclerView.Adapter<Adapter_Song_List.SongViewHolder>() {
+class Adapter_Song_List(private val list: List<Outdata_Song_List>) : RecyclerView.Adapter<Adapter_Song_List.SongViewHolder>() {
 
-    class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    // Code adapter lang nghe su kien
+    private lateinit var mListener: onItemClickListenner
+    interface onItemClickListenner {
+        fun onItemClick(position: Int)
+    }
+    fun setOnItemClickListenner(clickListenner: onItemClickListenner) {
+        mListener = clickListenner
+    }
+    class SongViewHolder(itemView: View, clickListenner: onItemClickListenner) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                clickListenner.onItemClick(adapterPosition)
+            }
+        }
         val imgSong: ImageView = itemView.findViewById(R.id.imgSong)
         val txtSongName: TextView = itemView.findViewById(R.id.txtSongName)
     }
@@ -20,15 +32,11 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.custome_song_list, parent, false)
-        return SongViewHolder(itemView)
+        return SongViewHolder(itemView, mListener)
     }
 
     override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = list[position]
-
-        // Kiểm tra dữ liệu bài hát
-        Log.d("Adapter", "🔄 Đang load bài hát: ${song.song_name}")
-        Log.d("Adapter", "🔗 Link ảnh: ${song.image}")
 
         Glide.with(holder.itemView.context)
             .load(song.image)
@@ -37,14 +45,6 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) :
             .into(holder.imgSong)
 
         holder.txtSongName.text = song.song_name
-
-        // Kiểm tra nếu ImageView hoặc TextView bị null
-        if (holder.imgSong == null) {
-            Log.e("Adapter", "⚠️ ImageView (imgSong) bị null!")
-        }
-        if (holder.txtSongName == null) {
-            Log.e("Adapter", "⚠️ TextView (txtSongName) bị null!")
-        }
     }
 
 

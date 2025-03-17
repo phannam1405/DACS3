@@ -46,6 +46,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:id="@+id/imgSong"
         android:src="@mipmap/music_player_icon"
         app:shapeAppearanceOverlay="@style/curved"
         app:strokeWidth="5dp"
