@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.DACS3" parent="Theme.MaterialComponents.DayNight">
+    <style name="Base.Theme.DACS3" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+
     </style>
 
     <style name="Theme.DACS3" parent="Base.Theme.DACS3" />

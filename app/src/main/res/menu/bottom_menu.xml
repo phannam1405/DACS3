@@ -12,4 +12,7 @@
     <item android:id="@+id/itemPlaylist"
         android:title="Playlists"
         android:icon="@drawable/icon_playlist"/>
+    <item android:id="@+id/itemDownload"
+        android:title="Download"
+        android:icon="@drawable/down"/>
 </menu>

@@ -7,16 +7,35 @@
     android:orientation="vertical"
     android:layout_margin="20dp">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:cardCornerRadius="16dp">
-        <ImageView
-            android:id="@+id/imgSong"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            tools:srcCompat="@tools:sample/avatars" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <!-- Ảnh bài hát -->
+            <ImageView
+                android:id="@+id/imgSong"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <!-- Nút Download (Ẩn ban đầu) -->
+            <ImageView
+                android:id="@+id/btnDownload"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:background="@drawable/dow_item"
+                android:visibility="gone"
+                android:contentDescription="Download Song"/>
+        </RelativeLayout>
+
     </androidx.cardview.widget.CardView>
 
     <TextView
@@ -25,4 +44,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:textColor="@color/white" />
+
 </LinearLayout>

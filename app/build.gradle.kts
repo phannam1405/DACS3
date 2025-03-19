@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-kapt")
 }
 
 android {
@@ -41,8 +42,12 @@ android {
 }
 
 dependencies {
+    implementation("androidx.room:room-ktx:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.cloudinary:cloudinary-android:2.3.1")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
