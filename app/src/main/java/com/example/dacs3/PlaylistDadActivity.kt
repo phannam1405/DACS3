@@ -3,16 +3,15 @@ package com.example.dacs3
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.dacs3.databinding.ActivityPlaylistBinding
+import com.example.dacs3.databinding.ActivityPlaylistDadBinding
 
-class PlaylistActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityPlaylistBinding
+
+class PlaylistDadActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityPlaylistDadBinding
     lateinit var adapter_playlist_dad: Adapter_Playlist_Dad
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityPlaylistBinding.inflate(layoutInflater)
+        binding = ActivityPlaylistDadBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)

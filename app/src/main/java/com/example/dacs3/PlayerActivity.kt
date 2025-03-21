@@ -1,6 +1,7 @@
 package com.example.dacs3
 
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
@@ -18,25 +19,30 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        val image_singer = intent.getStringExtra("singer")
+        val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
 
-
+        // Load ảnh bài hát
         Glide.with(this)
-            .load(image_singer)
+            .load(imageSong)
             .into(binding.imgSong)
 
         mediaPlayer = MediaPlayer()
         try {
             mediaPlayer?.apply {
-                setDataSource(audio) // Lấy nhạc từ Cloudinary
-                prepareAsync() // Chuẩn bị phát nhạc
+                if (audio?.startsWith("http") == true) {
+                    // Phát nhạc online từ URL
+                    setDataSource(audio)
+                } else {
+                    // Phát nhạc offline từ bộ nhớ
+                    setDataSource(this@PlayerActivity, Uri.parse(audio))
+                }
+                prepareAsync()
                 setOnPreparedListener {
                     start()
-                    binding.seekBar.max = duration // Cập nhật max cho SeekBar
-                    binding.endTime.text = formatTime(duration) // Hiển thị tổng thời gian
-                    updateSeekBar() // Bắt đầu cập nhật SeekBar
+                    binding.seekBar.max = duration
+                    binding.endTime.text = formatTime(duration)
+                    updateSeekBar()
                 }
             }
         } catch (e: IOException) {
@@ -57,19 +63,19 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
-    // Hàm cập nhật SeekBar liên tục
+    // Cập nhật SeekBar liên tục
     private fun updateSeekBar() {
         mediaPlayer?.let {
             binding.seekBar.progress = it.currentPosition
             binding.startTime.text = formatTime(it.currentPosition)
 
             if (it.isPlaying) {
-                handler.postDelayed({ updateSeekBar() }, 1000) // Cập nhật mỗi giây
+                handler.postDelayed({ updateSeekBar() }, 1000)
             }
         }
     }
 
-    // Hàm định dạng thời gian mm:ss
+    // Định dạng thời gian mm:ss
     private fun formatTime(millis: Int): String {
         val minutes = (millis / 1000) / 60
         val seconds = (millis / 1000) % 60
@@ -78,7 +84,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release() // Giải phóng MediaPlayer khi thoát
+        mediaPlayer?.release()
         mediaPlayer = null
     }
 }

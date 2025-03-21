@@ -9,17 +9,14 @@ import android.view.View
 import okhttp3.*
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.dacs3.databinding.ActivityMainBinding
 import com.google.firebase.database.*
-import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,18 +37,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
         // Cấu hình RecyclerView
         binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvSongList.setHasFixedSize(true)
+
         // Khởi tạo danh sách bài hát
         sl = arrayListOf<Outdata_Song_List>()
         layThongTinKhoNhac()
 
-
         // Drawer Navigation
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open_nav, R.string.close_nav)
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -82,9 +77,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.itemDownload -> {
-                    startActivity(Intent(this, Download::class.java))
+                    startActivity(Intent(this, DownloadActivity::class.java))
                     true
-                }
+                }R.id.itemPlaylist -> {
+                    startActivity(Intent(this, PlaylistDadActivity::class.java))
+                    true
+            }
                 else -> false
             }
         }
@@ -92,8 +90,12 @@ class MainActivity : AppCompatActivity() {
 
     //hàm tải nhạc
     fun downloadSong(song: Outdata_Song_List) {
+
+        // Tạo luồng để xử lý việc dowload nhạc
+        // Dispatchers.IO được dử dụng khi Gửi API, đọc/ghi file, truy vấn DB
         CoroutineScope(Dispatchers.IO).launch {
-            val client = OkHttpClient()
+            val client = OkHttpClient() //  Thực hiện các yêu cầu tải xuống từ URL.
+
             val downloadTasks = listOfNotNull(
                 song.audio?.let { it to "${song.song_name?.replace(" ", "_") ?: "default_song"}.mp3" },
                 song.image?.let { it to "cover_${song.song_name?.replace(" ", "_") ?: "default"}.jpg" },
@@ -101,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             )
 
             val downloadedPaths = mutableMapOf<String, String>()
-            var hasFailed = false
+            var hasFailed = false // Kiểm tra xem có lỗi xảy ra hay không
 
             // Duyệt danh sách URL cần tải và thực hiện tải từng file
             for ((url, fileName) in downloadTasks) {
@@ -127,12 +129,12 @@ class MainActivity : AppCompatActivity() {
             // Chuyển về Main Thread để cập nhật UI
             withContext(Dispatchers.Main) {
                 if (hasFailed) {
-                    Toast.makeText(this@MainActivity, "Tải một số file thất bại!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Tải thất bại!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this@MainActivity, "Tải thành công!", Toast.LENGTH_SHORT).show()
                 }
 
-                // Lưu vào database
+                // Gọi hàm lưu vào database
                 saveToDatabase(
                     song,
                     downloadedPaths[song.audio] ?: "",
@@ -145,16 +147,11 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    //hàm lưu nhạc
+    //hàm lưu nhạc vào database room
     fun saveToDatabase(song: Outdata_Song_List, filePath: String, coverPath: String, singerPath: String) {
         val database = MusicDatabase.getInstance(this)
         val musicDao = database.myDao()
 
-        // Log đường dẫn file trước khi lưu
-        Log.d("DatabaseCheck", "Song: ${song.song_name}")
-        Log.d("DatabaseCheck", "Cover Image Path: $coverPath")
-        Log.d("DatabaseCheck", "Singer Image Path: $singerPath")
-        Log.d("DatabaseCheck", "Audio File Path: $filePath")
         val music = Music(
             songName = song.song_name ?: "Unknown",
             coverImage = coverPath,
@@ -165,7 +162,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         musicDao.insert(music)
-        Toast.makeText(this, "Lưu vào database thành công!", Toast.LENGTH_SHORT).show()
 
     }
 
@@ -174,7 +170,6 @@ class MainActivity : AppCompatActivity() {
 
     // Lấy dữ liệu bài hát từ Firebase
     private fun layThongTinKhoNhac() {
-        Log.d("Firebase", "Hàm layThongTinKhoNhac() đã được gọi")
         dbref = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
             .getReference("Song")
 
@@ -215,7 +210,7 @@ class MainActivity : AppCompatActivity() {
                     adapter.setOnItemClickListenner(object : Adapter_Song_List.onItemClickListenner {
                         override fun onItemClick(position: Int) {
                             val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-                            intent.putExtra("singer", sl[position].singer)
+                            intent.putExtra("image", sl[position].image)
                             intent.putExtra("audio", sl[position].audio)
                             intent.putExtra("song_name", sl[position].song_name)
                             startActivity(intent)
@@ -238,10 +233,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-
-
-
-
 
 
     // Xử lý sự kiện bấm nút Menu trong ActionBar

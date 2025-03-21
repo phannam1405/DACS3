@@ -19,8 +19,8 @@ class MusicRepository(var application: Application) {
         db.myDao().update(course)
     }
 
-    fun delete(course: Music?) {
-        db.myDao().delete(course)
+    fun deleteMusic(course: Music?): Int {
+        return db.myDao().delete(course)
     }
 
     fun deleteAll() {

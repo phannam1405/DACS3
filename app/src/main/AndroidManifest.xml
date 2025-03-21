@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".Download"
+            android:name=".DownloadActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.DACS3"
             />
@@ -50,7 +50,7 @@
             android:exported="true"
             android:theme="@style/Theme.DACS3" />
         <activity
-            android:name=".PlaylistActivity"
+            android:name=".PlaylistDadActivity"
             android:exported="true"
             android:theme="@style/Theme.DACS3" />
     </application>

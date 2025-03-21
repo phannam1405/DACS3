@@ -13,11 +13,12 @@ interface MusicDao {
     //Annotation @Insert giúp Room hiểu rằng đây là câu lệnh INSERT INTO trong SQL
     @Insert
     fun insert(model: Music?)
+
     @Update
     fun update(model: Music?)
 
     @Delete
-    fun delete(model: Music?)
+    fun delete(model: Music?): Int
 
     @Query("DELETE FROM music_table")
     fun deleteAllCourses()

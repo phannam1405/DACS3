@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "music_table")
 class Music(songName: String, coverImage: String, localAudioPath: String, singerImage:String, cate:String, singer_name:String) {
-
-    @PrimaryKey(autoGenerate = true) var id: Int = 0
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
     val songName: String=songName
     val coverImage: String=coverImage
     val cate:String = cate

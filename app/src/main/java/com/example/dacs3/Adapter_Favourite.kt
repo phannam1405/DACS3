@@ -8,8 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 
 class Adapter_Favourite (val activity: Activity, val list: List<Outdata_Fav>) : ArrayAdapter<Outdata_Fav>(activity, R.layout.custom_favourite_list){
+
     override fun getCount(): Int {
-        return list.size // Ve danh sach yeu thich cua nguoi dung
+        return list.size
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

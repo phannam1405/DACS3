@@ -19,6 +19,8 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) : RecyclerVie
         fun onDownloadClicked(song: Outdata_Song_List)
     }
 
+    override fun getItemCount(): Int = list.size
+
     fun setOnItemClickListenner(clickListenner: onItemClickListenner) {
         mListener = clickListenner
     }
@@ -26,7 +28,6 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) : RecyclerVie
     // Hàm này sẽ gọi khi bấm vào màn hình trống để ẩn nút download
     fun clearSelectedPosition() {
         selectedPosition = -1
-
         notifyDataSetChanged()
     }
 
@@ -36,22 +37,36 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) : RecyclerVie
         val txtSongName: TextView = itemView.findViewById(R.id.txtSongName)
     }
 
+    // Tạo view holder cho mỗi item trong danh sách
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
-        val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.custome_song_list, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.custome_song_list, parent, false)
         return SongViewHolder(itemView)
     }
 
+
+    // Gắn dữ liệu cho từng item trong danh sách
     override fun onBindViewHolder(holder: SongViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val song = list[position]
 
+
+        // Thu viện lấy ảnh theo URL
         Glide.with(holder.itemView.context)
             .load(song.image)
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.error)
             .into(holder.imgSong)
-
         holder.txtSongName.text = song.song_name
+
+
+
+
+        // Xử lý khi click vào từng item
+        holder.itemView.setOnClickListener {
+            mListener.onItemClick(position)
+        }
+
+
+
 
         // Hiển thị nút download nếu item đang được chọn
         holder.btnDownload.visibility = if (selectedPosition == position) View.VISIBLE else View.GONE
@@ -67,12 +82,5 @@ class Adapter_Song_List(private val list: List<Outdata_Song_List>) : RecyclerVie
         holder.btnDownload.setOnClickListener {
             mListener.onDownloadClicked(song)
         }
-
-        // Xử lý khi click vào item
-        holder.itemView.setOnClickListener {
-            mListener.onItemClick(position)
-        }
     }
-
-    override fun getItemCount(): Int = list.size
 }

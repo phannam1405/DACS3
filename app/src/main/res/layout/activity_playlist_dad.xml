@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_player"
 
-    tools:context=".PlaylistActivity">
+    tools:context=".PlaylistDadActivity">
 
     <GridView
         android:id="@+id/gvPlaylist"
