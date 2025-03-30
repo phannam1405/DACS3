@@ -1,4 +1,4 @@
-package com.example.dacs3
+package com.example.dacs3.ui.adapter
 
 import android.app.Activity
 import android.view.View
@@ -6,8 +6,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.dacs3.data.model.OutdataPlaylistChild
+import com.example.dacs3.R
 
-class Adapter_Playlist_Child(val activity: Activity, val list: List<Outdata_Playlist_Child>): ArrayAdapter<Outdata_Playlist_Child>(activity, R.layout.custom_playlist_child_list) {
+class PlaylistChildAdapter(val activity: Activity, val list: List<OutdataPlaylistChild>): ArrayAdapter<OutdataPlaylistChild>(activity,
+    R.layout.custom_playlist_child_list
+) {
 
     override fun getCount(): Int {
         return list.size

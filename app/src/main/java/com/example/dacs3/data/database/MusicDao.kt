@@ -1,4 +1,4 @@
-package com.example.dacs3
+package com.example.dacs3.data.database
 
 
 import androidx.room.Dao
@@ -6,11 +6,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.example.dacs3.data.model.Music
 
 @Dao
 interface MusicDao {
 
-    //Annotation @Insert giúp Room hiểu rằng đây là câu lệnh INSERT INTO trong SQL
     @Insert
     fun insert(model: Music?)
 

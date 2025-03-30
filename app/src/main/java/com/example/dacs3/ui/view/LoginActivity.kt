@@ -1,4 +1,4 @@
-package com.example.dacs3
+package com.example.dacs3.ui.view
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -6,8 +6,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dacs3.databinding.ActivityLoginBinding
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
 

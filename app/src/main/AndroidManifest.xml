@@ -16,23 +16,23 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".DownloadActivity"
+            android:name=".ui.view.DownloadActivity"
             android:exported="false"
             android:theme="@style/Base.Theme.DACS3"
             />
         <activity
-            android:name=".PlaylistChildActivity"
+            android:name=".ui.view.PlaylistChildActivity"
             android:exported="false" />
         <activity
-            android:name=".FavouriteActivity"
+            android:name=".ui.view.FavouriteActivity"
             android:exported="false"
             android:theme="@style/Theme.DACS3" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.view.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.LoginPage" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.view.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.LoginPage">
             <intent-filter>
@@ -42,15 +42,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.view.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DACS3" />
         <activity
-            android:name=".PlayerActivity"
+            android:name=".ui.view.PlayerActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true"
             android:theme="@style/Theme.DACS3" />
         <activity
-            android:name=".PlaylistDadActivity"
+            android:name=".ui.view.PlaylistDadActivity"
             android:exported="true"
             android:theme="@style/Theme.DACS3" />
     </application>

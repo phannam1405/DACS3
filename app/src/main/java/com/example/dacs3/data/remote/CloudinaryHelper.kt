@@ -1,4 +1,4 @@
-package com.example.dacs3
+package com.example.dacs3.data.remote
 
 import com.cloudinary.Cloudinary
 

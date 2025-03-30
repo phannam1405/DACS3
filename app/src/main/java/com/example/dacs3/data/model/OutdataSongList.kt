@@ -1,6 +1,6 @@
-package com.example.dacs3
+package com.example.dacs3.data.model
 
-data class Outdata_Song_List(
+data class OutdataSongList(
     val song_name: String? = null,
     val image: String? = null,
     val audio: String? = null,

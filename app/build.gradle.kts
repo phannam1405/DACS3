@@ -46,8 +46,8 @@ dependencies {
     kapt("androidx.room:room-compiler:2.5.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.cloudinary:cloudinary-android:2.3.1")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.1") // Thư viện ta nhạc từ URL
-
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -1,6 +1,6 @@
-package com.example.dacs3;
+package com.example.dacs3.data.model
 
-public class Outdata_Fav(
+class OutdataPlaylistChild(
     val image: Int,
     val title: String,
     val singer: String,
