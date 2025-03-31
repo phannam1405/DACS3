@@ -11,8 +11,6 @@ class DownloadViewModel(application: Application) : AndroidViewModel(application
 
     private val musicRepository = MusicRepository(application)
 
-
-
     // Xóa nhạc khỏi database
     fun deleteSong(song: Music, position: Int, list: MutableList<Music>, callback: (Boolean) -> Unit) {
         val deletedRows = musicRepository.deleteMusic(song)
