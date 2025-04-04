@@ -75,7 +75,6 @@ class DownloadAdapter(
                     list.clear()
                     list.addAll(musicRepository.getAll()?.filterNotNull() ?: emptyList())
 
-                    Log.d("DeleteTest", "Danh sách sau khi load lại: ${list.size} bài hát")
                     notifyDataSetChanged()
                 }
                 setNegativeButton("Hủy", null)

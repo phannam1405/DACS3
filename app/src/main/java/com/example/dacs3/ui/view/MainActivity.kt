@@ -3,7 +3,6 @@ package com.example.dacs3.ui.view
 
 import android.content.Intent
 import android.os.Bundle
-import okhttp3.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +11,6 @@ import com.example.dacs3.data.model.OutdataSongList
 import com.example.dacs3.databinding.ActivityMainBinding
 import com.example.dacs3.ui.adapter.SongListAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
-import com.google.firebase.database.*
 import com.example.dacs3.R
 
 
@@ -20,6 +18,7 @@ import com.example.dacs3.R
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

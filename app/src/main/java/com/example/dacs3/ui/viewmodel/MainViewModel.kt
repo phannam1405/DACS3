@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.dacs3.data.database.MusicDatabase
 import com.example.dacs3.data.model.Music
 import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.repository.MusicRepository
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -27,8 +28,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _songs = MutableLiveData<List<OutdataSongList>>()
     val songs: LiveData<List<OutdataSongList>> get() = _songs
 
+    private val musicRepository = MusicRepository(application)
     private val database = MusicDatabase.getInstance(application)
-    private val musicDao = database.myDao()
 
     private val dbref: DatabaseReference = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -105,7 +106,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             singer_name = song.singer_name ?: "Unknown"
         )
         CoroutineScope(Dispatchers.IO).launch {
-            musicDao.insert(music)
+            musicRepository.insertMusic(music)
         }
     }
 }

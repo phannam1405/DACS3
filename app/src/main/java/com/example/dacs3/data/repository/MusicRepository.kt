@@ -6,14 +6,13 @@ import com.example.dacs3.data.model.Music
 
 class MusicRepository(var application: Application) {
 
-    private lateinit var db: MusicDatabase //db là biến chứa database.
+    private lateinit var db: MusicDatabase
 
-    //Để khởi tạo database hoac lấy ra db đó
     init {
         db = MusicDatabase.getInstance(application)
     }
 
-    fun insert(course: Music?) {
+    fun insertMusic(course: Music?) {
         db.myDao().insert(course)
     }
 

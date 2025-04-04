@@ -22,7 +22,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     val currentPosition: LiveData<Int> = _currentPosition
 
     fun prepareMediaPlayer(audio: String?, uri: String?) {
-        releaseMediaPlayer() // Giải phóng MediaPlayer trước khi tạo mới
+        releaseMediaPlayer() // Giải phóng MediaPlayer
         mediaPlayer = MediaPlayer()
 
         try {

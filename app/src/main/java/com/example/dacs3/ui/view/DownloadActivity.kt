@@ -16,12 +16,11 @@ import com.example.dacs3.databinding.ActivityDownloadBinding
 import com.example.dacs3.ui.adapter.DownloadAdapter
 import com.example.dacs3.ui.viewmodel.DownloadViewModel
 
-class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListener { // Sửa tên đúng chuẩn
+class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListener {
     private lateinit var binding: ActivityDownloadBinding
     private lateinit var database: MusicDatabase
     lateinit var res: MusicRepository
     lateinit var rvDown: ListView
-    private val viewModel: DownloadViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -9,20 +9,6 @@ import com.example.dacs3.data.repository.MusicRepository
 
 class DownloadViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicRepository = MusicRepository(application)
-
-    // Xóa nhạc khỏi database
-    fun deleteSong(song: Music, position: Int, list: MutableList<Music>, callback: (Boolean) -> Unit) {
-        val deletedRows = musicRepository.deleteMusic(song)
-        Log.d("DeleteSong", "Số dòng bị xóa: $deletedRows")
-        if (deletedRows > 0) {
-            list.removeAt(position)
-            callback(true)
-        } else {
-            callback(false)
-        }
-    }
-
     // Lấy thời gian của audio để phục vụ cho seekbar
     fun getAudioDuration(audioPath: String?): String {
         if (audioPath.isNullOrEmpty()) return "00:00"

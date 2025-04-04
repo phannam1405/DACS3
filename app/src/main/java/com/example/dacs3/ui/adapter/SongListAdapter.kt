@@ -27,12 +27,6 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         mListener = clickListenner
     }
 
-    // Hàm này sẽ gọi khi bấm vào màn hình trống để ẩn nút download
-    fun clearSelectedPosition() {
-        selectedPosition = -1
-        notifyDataSetChanged()
-    }
-
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val btnDownload: ImageView = itemView.findViewById(R.id.btnDownload)
         val imgSong: ImageView = itemView.findViewById(R.id.imgSong)
@@ -66,8 +60,6 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         holder.itemView.setOnClickListener {
             mListener.onItemClick(position)
         }
-
-
 
 
         // Hiển thị nút download nếu item đang được chọn

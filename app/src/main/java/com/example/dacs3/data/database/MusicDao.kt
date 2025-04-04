@@ -10,7 +10,6 @@ import com.example.dacs3.data.model.Music
 
 @Dao
 interface MusicDao {
-
     @Insert
     fun insert(model: Music?)
 
