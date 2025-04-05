@@ -1,17 +1,25 @@
 package com.example.dacs3.ui.view
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.dacs3.data.model.OutdataPlaylistDad
 import com.example.dacs3.R
+import com.example.dacs3.data.model.OutdataSongList
 import com.example.dacs3.databinding.ActivityPlaylistDadBinding
 import com.example.dacs3.ui.adapter.PlaylistDadAdapter
+import com.example.dacs3.ui.adapter.SongListAdapter
+import com.example.dacs3.ui.viewmodel.MainViewModel
+import com.example.dacs3.ui.viewmodel.PlayListDadViewModel
 
 
 class PlaylistDadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistDadBinding
-    lateinit var adapter_playlist_dad: PlaylistDadAdapter
+
+    private lateinit var viewModel: PlayListDadViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityPlaylistDadBinding.inflate(layoutInflater)
@@ -20,15 +28,26 @@ class PlaylistDadActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.hide()
-        // Khai bao danh sach yeu thich cua nguoi dung
-        val list = mutableListOf<OutdataPlaylistDad>()
 
-        list.add(OutdataPlaylistDad(R.drawable.singer_minh_gay, "Minh Gay"))
-        list.add(OutdataPlaylistDad(R.drawable.singer_minh_gay, "Minh Gay"))
-        list.add(OutdataPlaylistDad(R.drawable.singer_minh_gay, "Minh Gay"))
+        viewModel = ViewModelProvider(this).get(PlayListDadViewModel::class.java)
 
-        adapter_playlist_dad = PlaylistDadAdapter(this, list)
-        binding.gvPlaylist.adapter = adapter_playlist_dad
+        // Quan sát dữ liệu từ ViewModel
+        viewModel.playlist.observe(this) { playlist ->
+            val adapter = PlaylistDadAdapter(this, playlist)
+            binding.gvPlaylist.adapter = adapter
+
+            adapter.setOnItemClickListenner(object : PlaylistDadAdapter.onItemClickListenner {
+                override fun onItemClick(position: Int) {
+                    val intent = Intent(this@PlaylistDadActivity, PlaylistChildActivity::class.java)
+                    intent.putExtra("image", playlist[position].image)
+                    intent.putExtra("audio", playlist[position].title)
+
+                    startActivity(intent)
+                }
+
+
+            })
+        }
 
     }
 }

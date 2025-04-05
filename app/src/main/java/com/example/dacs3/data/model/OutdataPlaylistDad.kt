@@ -1,7 +1,8 @@
 package com.example.dacs3.data.model
 
+
+
 class OutdataPlaylistDad(
-    val image: Int,
-    val title: String
-) {
-}
+    val image: Int? = null,
+    val title: String? = null
+)
