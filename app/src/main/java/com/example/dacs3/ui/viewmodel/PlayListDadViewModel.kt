@@ -34,9 +34,8 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
 
 
     private fun layThongTinPlaylist() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return  // Lấy UID người dùng hiện tại
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        // Truy vấn các playlist của người dùng dựa trên UID
         val playlistsQuery = dbref.orderByChild("owner").equalTo(userId)
 
         playlistsQuery.addValueEventListener(object : ValueEventListener {
@@ -45,7 +44,15 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
                 if (snapshot.exists()) {
                     for (musicSnapshot in snapshot.children) {
                         val playlist = musicSnapshot.getValue(OutdataPlaylistDad::class.java)
-                        playlist?.let { playLists.add(it) }
+                        val id = musicSnapshot.key  // <- lấy key làm id
+                        if (playlist != null && id != null) {
+                            val playlistWithId = OutdataPlaylistDad(
+                                image = playlist.image,
+                                title = playlist.title,
+                                id = id // <- gán id thủ công
+                            )
+                            playLists.add(playlistWithId)
+                        }
                     }
                 }
                 _playlists.postValue(playLists)
@@ -56,4 +63,54 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
             }
         })
     }
+
+    fun AddPlayListInFB(tieuDe: String) {
+
+
+        dbref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var maxIndex = 0
+
+                for (playlistSnapshot in snapshot.children) {
+                    val key = playlistSnapshot.key
+                    if (key != null && key.startsWith("playlist")) {
+                        val numberPart = key.removePrefix("playlist").toIntOrNull()
+                        if (numberPart != null && numberPart > maxIndex) {
+                            maxIndex = numberPart
+                        }
+                    }
+                }
+
+                val newId = "playlist${maxIndex + 1}"
+                val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+                val playlist = OutdataPlaylistDad(
+                    owner = userId,
+                    title = tieuDe
+                )
+
+                // Ghi playlist và khởi tạo songs là rỗng
+                val playlistMap = mapOf(
+                    "owner" to userId,
+                    "title" to tieuDe,
+                    "songs" to emptyMap<String, Boolean>()  // <- Tạo songs rỗng
+                )
+
+                dbref.child(newId).setValue(playlistMap)
+                    .addOnSuccessListener {
+                        Log.d("Firebase", "Tạo playlist mới thành công với ID: $newId")
+                    }
+                    .addOnFailureListener {
+                        Log.e("Firebase", "Lỗi khi tạo playlist: ${it.message}")
+                    }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Lỗi truy cập Firebase: ${error.message}")
+            }
+        })
+    }
+
+
+
 }

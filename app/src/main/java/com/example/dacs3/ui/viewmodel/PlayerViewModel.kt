@@ -7,9 +7,19 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.database.FirebaseDatabase
 import java.io.IOException
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
+
+
+    private val dbrefPlaylist = FirebaseDatabase.getInstance(
+        "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    ).getReference("Playlist")
+    private val dbrefSongs = FirebaseDatabase.getInstance(
+        "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    ).getReference("Song")
+
     private var mediaPlayer: MediaPlayer? = null
 
     private val _isPlaying = MutableLiveData<Boolean>()
@@ -81,4 +91,10 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
+
+
+
+
+
 }

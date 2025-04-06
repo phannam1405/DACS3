@@ -2,8 +2,10 @@ package com.example.dacs3.ui.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.dacs3.data.model.OutdataPlaylistDad
@@ -38,16 +40,49 @@ class PlaylistDadActivity : AppCompatActivity() {
 
             adapter.setOnItemClickListenner(object : PlaylistDadAdapter.onItemClickListenner {
                 override fun onItemClick(position: Int) {
+                    val playlistId = viewModel.playlist.value?.get(position)?.id
                     val intent = Intent(this@PlaylistDadActivity, PlaylistChildActivity::class.java)
-                    intent.putExtra("image", playlist[position].image)
-                    intent.putExtra("audio", playlist[position].title)
-
+                    intent.putExtra("playlistId", playlistId)
                     startActivity(intent)
                 }
 
 
             })
         }
+
+        // thêm playlist mới
+        binding.btnAddPlaylist.setOnClickListener {
+            addNewPlaylist()
+        }
+
+    }
+
+    private fun addNewPlaylist() {
+
+            // Khởi tạo EditText cho tên Playlist
+            val editText = EditText(this)
+            editText.hint = "Enter Playlist Name"
+
+            // Tạo AlertDialog
+            val dialog = AlertDialog.Builder(this)
+                .setTitle("Add New Playlist")
+                .setView(editText)
+                .setPositiveButton("Add") { _, _ ->
+
+                    val playlistName = editText.text.toString().trim()
+                    if (playlistName.isNotEmpty()) {
+                        viewModel.AddPlayListInFB(playlistName)
+                    } else {
+                        Toast.makeText(this, "Playlist name cannot be empty", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton("Cancel") { dialogInterface, _ ->
+                    dialogInterface.dismiss() // Huỷ dialog khi nhấn Cancel
+                }
+                .create()
+
+            // Hiển thị dialog
+            dialog.show()
 
     }
 }

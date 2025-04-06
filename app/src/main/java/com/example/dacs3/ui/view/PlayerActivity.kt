@@ -4,22 +4,28 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.dacs3.databinding.ActivityPlayerBinding
+import com.example.dacs3.ui.viewmodel.MainViewModel
 import com.example.dacs3.ui.viewmodel.PlayerViewModel
+import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
     private val viewModel: PlayerViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
         val uri = intent.getStringExtra("uri")
+        val songId = intent.getStringExtra("song_id")
 
         Glide.with(this).load(imageSong).into(binding.imgSong)
 
@@ -56,7 +62,12 @@ class PlayerActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
+
+
     }
+
+
+
 
     override fun onDestroy() {
         super.onDestroy()

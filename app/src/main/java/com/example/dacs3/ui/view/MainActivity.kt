@@ -12,12 +12,13 @@ import com.example.dacs3.databinding.ActivityMainBinding
 import com.example.dacs3.ui.adapter.SongListAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
 import com.example.dacs3.R
-
+import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var viewModelChild: PlaylistChildViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModelChild = ViewModelProvider(this).get(PlaylistChildViewModel::class.java)
+        viewModelChild.loadPlaylistsDad()
 
         binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvSongList.setHasFixedSize(true)
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onItemClick(position: Int) {
                     val intent = Intent(this@MainActivity, PlayerActivity::class.java)
                     intent.putExtra("image", songs[position].image)
+                    intent.putExtra("song_id", songs[position].id)
                     intent.putExtra("audio", songs[position].audio)
                     intent.putExtra("song_name", songs[position].song_name)
                     startActivity(intent)
@@ -74,7 +78,21 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                     }
                 }
+
+                override fun onAddPlaylist(song: OutdataSongList) {
+                    song.id?.let {
+                        viewModelChild.showAddSongDialog(this@MainActivity, it)
+                    }
+                }
+
             })
         }
+
+
+
+
     }
+
+
+
 }

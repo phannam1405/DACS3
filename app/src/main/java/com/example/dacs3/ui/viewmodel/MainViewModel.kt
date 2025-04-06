@@ -39,6 +39,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         layThongTinKhoNhac()
     }
 
+    //cũ
+//    private fun layThongTinKhoNhac() {
+//        dbref.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val songList = mutableListOf<OutdataSongList>()
+//                if (snapshot.exists()) {
+//                    for (musicSnapshot in snapshot.children) {
+//                        val song = musicSnapshot.getValue(OutdataSongList::class.java)
+//                        song?.let { songList.add(it) }
+//                    }
+//                }
+//                _songs.postValue(songList)
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
+//            }
+//        })
+//    }
+
     private fun layThongTinKhoNhac() {
         dbref.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -46,7 +66,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 if (snapshot.exists()) {
                     for (musicSnapshot in snapshot.children) {
                         val song = musicSnapshot.getValue(OutdataSongList::class.java)
-                        song?.let { songList.add(it) }
+                        song?.let {
+                            it.id = musicSnapshot.key  // Gán key của Firebase vào thuộc tính id
+                            songList.add(it)
+                        }
                     }
                 }
                 _songs.postValue(songList)
@@ -57,6 +80,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
+
 
     fun downloadSong(song: OutdataSongList, onComplete: (Boolean) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -109,4 +133,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             musicRepository.insertMusic(music)
         }
     }
+
+
 }

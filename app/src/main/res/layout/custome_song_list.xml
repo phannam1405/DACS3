@@ -34,6 +34,16 @@
                 android:background="@drawable/dow_item"
                 android:visibility="gone"
                 android:contentDescription="Download Song"/>
+
+            <ImageView
+                android:id="@+id/btnAddtoPlaylist"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+
+                android:scaleType="fitCenter"
+                android:background="@drawable/add"
+
+                android:contentDescription="Download Song"/>
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

@@ -19,6 +19,7 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
     interface onItemClickListenner {
         fun onItemClick(position: Int)
         fun onDownloadClicked(song: OutdataSongList)
+        fun onAddPlaylist(song: OutdataSongList)
     }
 
     override fun getItemCount(): Int = list.size
@@ -31,6 +32,7 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         val btnDownload: ImageView = itemView.findViewById(R.id.btnDownload)
         val imgSong: ImageView = itemView.findViewById(R.id.imgSong)
         val txtSongName: TextView = itemView.findViewById(R.id.txtSongName)
+        val btnAddPl:ImageView = itemView.findViewById(R.id.btnAddtoPlaylist)
     }
 
     // Tạo view holder cho mỗi item trong danh sách
@@ -76,5 +78,11 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         holder.btnDownload.setOnClickListener {
             mListener.onDownloadClicked(song)
         }
+
+        holder.btnAddPl.setOnClickListener {
+            mListener.onAddPlaylist(song)
+        }
+
+
     }
 }

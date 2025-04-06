@@ -22,6 +22,7 @@
             />
         <activity
             android:name=".ui.view.PlaylistChildActivity"
+            android:theme="@style/Theme.DACS3"
             android:exported="false" />
         <activity
             android:name=".ui.view.FavouriteActivity"
