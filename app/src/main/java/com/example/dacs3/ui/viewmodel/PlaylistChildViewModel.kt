@@ -97,7 +97,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         val checkedItems = BooleanArray(playlists.size) { false }
         val items = playlists.map { it.title ?: "Unknown Playlist" }.toTypedArray()
 
-        val dialog = AlertDialog.Builder(context)  // <--- Dùng context từ Activity truyền vào
+        val dialog = AlertDialog.Builder(context)
             .setTitle("Select Playlists to Add Song")
             .setMultiChoiceItems(items, checkedItems) { _, which, isChecked ->
                 checkedItems[which] = isChecked
@@ -114,8 +114,19 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
             .setNegativeButton("Cancel", null)
             .create()
 
+        // Đảm bảo rằng ListView đã được khởi tạo
+        dialog.setOnShowListener {
+            val listView = dialog.listView
+            val params = listView.layoutParams
+            params.height = 600  // Điều chỉnh chiều cao theo nhu cầu
+            listView.layoutParams = params
+        }
+
         dialog.show()
     }
+
+
+
 
 
 
