@@ -8,30 +8,29 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-
+import android.widget.PopupMenu
 import com.example.dacs3.data.model.OutdataPlaylistDad
 import com.example.dacs3.R
 
-class PlaylistDadAdapter(val activity: Activity, var list: List<OutdataPlaylistDad>) : ArrayAdapter<OutdataPlaylistDad>(activity,
-    R.layout.custom_playlist_dad_list, list) {
+class PlaylistDadAdapter(
+    private val activity: Activity,
+    private var list: List<OutdataPlaylistDad>
+) : ArrayAdapter<OutdataPlaylistDad>(activity, R.layout.custom_playlist_dad_list, list) {
 
-    private var itemClickListener: onItemClickListenner? = null
+    private var itemClickListener: OnItemClickListener? = null
 
     // ViewHolder pattern to improve performance
     private class ViewHolder(view: View) {
         val imageView: ImageView = view.findViewById(R.id.imgList)
         val titleView: TextView = view.findViewById(R.id.txtListTitle)
+        val moreButton: ImageView = view.findViewById(R.id.btnMore)
     }
 
-    override fun getCount(): Int {
-        return list.size
-    }
+    override fun getCount(): Int = list.size
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
-
-        // Reuse or create a new row view
         val rowView: View = if (convertView == null) {
             val inflater = activity.layoutInflater
             val view = inflater.inflate(R.layout.custom_playlist_dad_list, parent, false)
@@ -48,9 +47,32 @@ class PlaylistDadAdapter(val activity: Activity, var list: List<OutdataPlaylistD
         holder.imageView.setImageResource(R.drawable.singer_minh_gay)
         holder.titleView.text = currentItem.title
 
-        // Set on click listener for the item
+        // Set item click listener
         rowView.setOnClickListener {
             itemClickListener?.onItemClick(position)
+        }
+
+
+        holder.moreButton.setOnClickListener { v ->
+            val popupMenu = PopupMenu(activity, v)
+            popupMenu.menuInflater.inflate(R.menu.menu_playlist_options, popupMenu.menu)
+
+
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_edit -> {
+                        itemClickListener?.onEditNameClick(position)
+                        true
+                    }
+                    R.id.menu_delete -> {
+                        itemClickListener?.onDeleteClick(position)
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+            popupMenu.show()
         }
 
         return rowView
@@ -63,13 +85,14 @@ class PlaylistDadAdapter(val activity: Activity, var list: List<OutdataPlaylistD
     }
 
     // Interface for item click listener
-    interface onItemClickListenner {
+    interface OnItemClickListener {
         fun onItemClick(position: Int)
+        fun onDeleteClick(position: Int)
+        fun onEditNameClick(position: Int)
     }
 
     // Method to set the item click listener
-    fun setOnItemClickListenner(listener: onItemClickListenner) {
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.itemClickListener = listener
     }
 }
-

@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,17 +82,25 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onAddPlaylist(song: OutdataSongList) {
                     song.id?.let {
+                        viewModelChild.loadPlaylistsDad()
                         viewModelChild.showAddSongDialog(this@MainActivity, it)
                     }
                 }
+
+
 
             })
         }
 
 
-
-
     }
+
+    //  Tự động cập nhật danh sách khi quay lại từ activity khác
+    override fun onResume() {
+        super.onResume()
+        viewModelChild.loadPlaylistsDad()
+    }
+
 
 
 

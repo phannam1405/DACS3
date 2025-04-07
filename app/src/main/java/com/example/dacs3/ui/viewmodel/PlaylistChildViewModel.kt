@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dacs3.data.model.OutdataPlaylistDad
 import com.example.dacs3.data.model.OutdataSongList
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -55,6 +56,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
                 dbrefSongs.child(songId).get().addOnSuccessListener { songSnap ->
                     val song = songSnap.getValue(OutdataSongList::class.java)
                     song?.let {
+                        it.id = songId // gắn id vào key_node
                         songList.add(it)
                     }
 
@@ -78,18 +80,22 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         playlistRef.child(musicId).setValue(true)
     }
     fun loadPlaylistsDad() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         dbrefPlaylist.get().addOnSuccessListener { snapshot ->
             val list = mutableListOf<OutdataPlaylistDad>()
             for (child in snapshot.children) {
                 val playlist = child.getValue(OutdataPlaylistDad::class.java)
-                playlist?.let {
-                    it.id = child.key  // Gán ID = key trong Firebase
-                    list.add(it)
+                val owner = child.child("owner").getValue(String::class.java)
+
+                if (playlist != null && owner == userId) {
+                    playlist.id = child.key  // Gán ID = key trong Firebase
+                    list.add(playlist)
                 }
             }
             _playlistsDad.value = list
         }
     }
+
 
 
     fun showAddSongDialog(context: Context, musicId: String) {
@@ -118,13 +124,21 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         dialog.setOnShowListener {
             val listView = dialog.listView
             val params = listView.layoutParams
-            params.height = 600  // Điều chỉnh chiều cao theo nhu cầu
+            params.height = 400  // Điều chỉnh chiều cao theo nhu cầu
             listView.layoutParams = params
         }
 
         dialog.show()
     }
 
+    fun deleteSongFromPlaylist(id: String) {
+        val currentPlaylistId = playlistId ?: return
+
+        val songRef = dbrefPlaylist.child(currentPlaylistId).child("songs").child(id)
+
+        songRef.removeValue()
+        layNhacTrongPlaylist(currentPlaylistId)
+    }
 
 
 

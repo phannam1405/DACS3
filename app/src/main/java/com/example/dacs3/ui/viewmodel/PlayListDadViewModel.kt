@@ -55,7 +55,13 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
                         }
                     }
                 }
-                _playlists.postValue(playLists)
+                // Sắp xếp các playlist theo id tăng dần
+                val sortedPlaylists = playLists.sortedBy { it.id?.removePrefix("playlist")
+                    ?.toIntOrNull()
+                    ?: Int.MAX_VALUE }
+
+                // Cập nhật lại LiveData với danh sách đã sắp xếp
+                _playlists.postValue(sortedPlaylists)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -63,6 +69,7 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
             }
         })
     }
+
 
     fun AddPlayListInFB(tieuDe: String) {
 
@@ -110,6 +117,41 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
             }
         })
     }
+
+    //xoá playlist
+    fun deletePlaylist(playlistId: String) {
+        dbref.child(playlistId).removeValue()
+            .addOnSuccessListener {
+                Log.d("Firebase", "Xóa playlist thành công với ID: $playlistId")
+                // Cập nhật lại danh sách
+                val updatedList = _playlists.value?.filter { it.id != playlistId }
+                _playlists.postValue(updatedList) // Cập nhật lại LiveData
+            }
+            .addOnFailureListener {
+                Log.e("Firebase", "Lỗi khi xóa playlist: ${it.message}")
+            }
+    }
+
+    fun updatePlaylistName(playlistId: String, newName: String) {
+        val playlistMap = mapOf("title" to newName)
+
+        dbref.child(playlistId).updateChildren(playlistMap)
+            .addOnSuccessListener {
+                Log.d("Firebase", "Cập nhật tên playlist thành công cho ID: $playlistId")
+                // Cập nhật tên playlist trong danh sách LiveData
+                _playlists.value = _playlists.value?.map {
+                    if (it.id == playlistId) {
+                        it.copy(title = newName) // Cập nhật tên mới
+                    } else {
+                        it
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Firebase", "Lỗi khi cập nhật tên playlist: ${it.message}")
+            }
+    }
+
 
 
 

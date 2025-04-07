@@ -3,80 +3,91 @@ package com.example.dacs3.ui.adapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.example.dacs3.data.model.OutdataSongList
 import com.example.dacs3.R
+import com.example.dacs3.data.model.OutdataSongList
 
-class PlaylistChildAdapter(val activity: Activity, var list: List<OutdataSongList>) : ArrayAdapter<OutdataSongList>(activity,
-    R.layout.custom_playlist_child_list, list) {
+class PlaylistChildAdapter(
+    val activity: Activity,
+    var list: List<OutdataSongList>
+) : ArrayAdapter<OutdataSongList>(activity, R.layout.custom_playlist_child_list, list) {
 
     private var itemClickListener: onItemClickListener? = null
+    private var deleteClickListener: OnDeleteClickListener? = null
 
-    // ViewHolder pattern to improve performance
     private class ViewHolder(view: View) {
         val imageView: ImageView = view.findViewById(R.id.imgMusic)
         val titleView: TextView = view.findViewById(R.id.txtTitle)
         val singerView: TextView = view.findViewById(R.id.txtSinger)
         val timeView: TextView = view.findViewById(R.id.txtTime)
+        val btnDelete: ImageView = view.findViewById(R.id.btnDeleteSongInPlayList)
     }
 
-    override fun getCount(): Int {
-        return list.size
-    }
+    override fun getCount(): Int = list.size
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val holder: ViewHolder
+        val rowView: View
 
-        // Reuse or create a new row view
-        val rowView: View = if (convertView == null) {
-            val inflater = activity.layoutInflater
-            val view = inflater.inflate(R.layout.custom_playlist_child_list, parent, false)
-            holder = ViewHolder(view)
-            view.tag = holder
-            view
+        if (convertView == null) {
+            val inflater = LayoutInflater.from(context)
+            rowView = inflater.inflate(R.layout.custom_playlist_child_list, parent, false)
+            holder = ViewHolder(rowView)
+            rowView.tag = holder
         } else {
-            holder = convertView.tag as ViewHolder
-            convertView
+            rowView = convertView
+            holder = rowView.tag as ViewHolder
         }
 
-        // Set image, title, singer, and time for the current row
         val currentItem = list[position]
+
         Glide.with(activity)
-            .load(list[position].image)  // URL của ảnh
+            .load(currentItem.image)
             .into(holder.imageView)
 
         holder.titleView.text = currentItem.song_name
         holder.singerView.text = currentItem.singer_name
         holder.timeView.text = currentItem.cate
 
-        // Set on click listener for the item
+        // Click toàn item (nếu bạn vẫn muốn dùng)
         rowView.setOnClickListener {
             itemClickListener?.onItemClick(position)
+        }
+
+        // Click vào nút xoá
+        holder.btnDelete.setOnClickListener {
+            deleteClickListener?.onDeleteClick(position)
         }
 
         return rowView
     }
 
-    // Method to update the list data
     fun updateData(newList: List<OutdataSongList>) {
         list = newList
         Log.d("PlaylistChildAdapter", "List data updated, size: ${list.size}")
-        notifyDataSetChanged() // Notify that the data has changed
+        notifyDataSetChanged()
     }
 
-    // Interface for item click listener
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }
 
-    // Method to set the item click listener
+    interface OnDeleteClickListener {
+        fun onDeleteClick(position: Int)
+    }
+
     fun setOnItemClickListener(listener: onItemClickListener) {
         this.itemClickListener = listener
+    }
+
+    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
+        this.deleteClickListener = listener
     }
 }
