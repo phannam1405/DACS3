@@ -15,7 +15,9 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
+import com.example.dacs3.R
 import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.ui.viewmodel.FavouriteViewModel
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
 
@@ -24,6 +26,7 @@ class PlayerActivity : AppCompatActivity() {
     private val viewModel: PlayerViewModel by viewModels()
     private lateinit var rotateAnimator: ObjectAnimator
     private val playlistViewModel: PlaylistChildViewModel by viewModels()
+    private val favViewModel: FavouriteViewModel by viewModels()
     private var visualizer: Visualizer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,9 +39,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.toolbarInclude.btnReturn.setOnClickListener{
             finish()
         }
-        binding.toolbarInclude.btnHeart.setOnClickListener{
-            Toast.makeText(this, "Heart clicked", Toast.LENGTH_SHORT).show()
-        }
+
 
         // Xoay đĩa nhạc
         rotateAnimator = ObjectAnimator.ofFloat(binding.imgSong, View.ROTATION, 0f, 360f).apply {
@@ -48,17 +49,37 @@ class PlayerActivity : AppCompatActivity() {
         }
 
 
+
         val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
-        val uri = intent.getStringExtra("uri")
+        //val uri = intent.getStringExtra("uri")
         val name = intent.getStringExtra("song_name")
         val song = intent.getSerializableExtra("song") as? OutdataSongList
+
+        val songId = intent.getStringExtra("song_id")
+
+        //check xem đã tim chưa để set tim đầy hoặc rỗng
+
+        songId?.let { id ->
+            favViewModel.isSongFavourite(id) { isFav ->
+                var isCurrentlyFav = isFav
+                updateHeartIcon(isCurrentlyFav)
+
+                binding.toolbarInclude.btnHeart.setOnClickListener {
+                    favViewModel.toggleFavourite(id)
+                    isCurrentlyFav = !isCurrentlyFav
+                    updateHeartIcon(isCurrentlyFav)
+                }
+            }
+        }
+
+
 
 
         binding.songName.text = name
         Glide.with(this).load(imageSong).into(binding.imgSong)
 
-        viewModel.prepareMediaPlayer(audio, uri)
+        viewModel.prepareMediaPlayer(audio)
 
         viewModel.duration.observe(this) {
             binding.seekBar.max = it
@@ -119,6 +140,15 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun updateHeartIcon(isFav: Boolean) {
+        val iconRes = if (isFav) {
+            R.drawable.heart_fill_svgrepo_com
+        } else {
+            R.drawable.icon_heart
+        }
+        binding.toolbarInclude.btnHeart.setImageResource(iconRes)
     }
 
 

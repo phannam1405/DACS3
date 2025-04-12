@@ -46,7 +46,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     private val musicRepository = MusicRepository(application)
 
-    fun prepareMediaPlayer(audio: String?, uri: String?) {
+    fun prepareMediaPlayer(audio: String?) {
         releaseMediaPlayer() // Giải phóng MediaPlayer
         mediaPlayer = MediaPlayer()
 

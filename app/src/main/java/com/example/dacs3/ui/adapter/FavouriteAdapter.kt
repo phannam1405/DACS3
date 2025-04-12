@@ -1,5 +1,7 @@
 package com.example.dacs3.ui.adapter
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,32 +9,85 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.dacs3.R
 import com.example.dacs3.data.model.OutdataFav
+import com.example.dacs3.data.model.OutdataSongList
 
 class FavouriteAdapter(
-    private val activity: AppCompatActivity,
-    private val list: List<OutdataFav>
-) : ArrayAdapter<OutdataFav>(activity, R.layout.custom_favourite_list) {
+    val activity: Activity,
+    var list: List<OutdataSongList>
+) : ArrayAdapter<OutdataSongList>(activity, R.layout.custom_favourite_list, list) {
+
+    private var itemClickListener: onItemClickListener? = null
+    private var deleteClickListener: OnDeleteClickListener? = null
+
+    private class ViewHolder(view: View) {
+        val imageView: ImageView = view.findViewById(R.id.imgMusic)
+        val titleView: TextView = view.findViewById(R.id.txtTitle)
+        val singerView: TextView = view.findViewById(R.id.txtSinger)
+        val timeView: TextView = view.findViewById(R.id.txtTime)
+        val btnDelete: ImageView = view.findViewById(R.id.imgDelete)
+    }
 
     override fun getCount(): Int = list.size
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val rowView = convertView ?: LayoutInflater.from(activity).inflate(
-            R.layout.custom_favourite_list, parent, false
-        )
+        val holder: ViewHolder
+        val rowView: View
 
-        val images = rowView.findViewById<ImageView>(R.id.imgMusic)
-        val title = rowView.findViewById<TextView>(R.id.txtTitle)
-        val singer = rowView.findViewById<TextView>(R.id.txtSinger)
-        val time = rowView.findViewById<TextView>(R.id.txtTime)
+        if (convertView == null) {
+            val inflater = LayoutInflater.from(context)
+            rowView = inflater.inflate(R.layout.custom_favourite_list, parent, false)
+            holder = ViewHolder(rowView)
+            rowView.tag = holder
+        } else {
+            rowView = convertView
+            holder = rowView.tag as ViewHolder
+        }
 
-        val song = list[position]
-        title.text = song.title
-        singer.text = song.singer
-        time.text = song.time
-        images.setImageResource(song.image)
+        val currentItem = list[position]
+
+        Glide.with(activity)
+            .load(currentItem.image)
+            .into(holder.imageView)
+
+        holder.titleView.text = currentItem.song_name
+        holder.singerView.text = currentItem.singer_name
+        holder.timeView.text = currentItem.cate
+
+        // Click toàn item
+        rowView.setOnClickListener {
+            itemClickListener?.onItemClick(position)
+        }
+
+        // Click vào nút xoá
+        holder.btnDelete.setOnClickListener {
+            deleteClickListener?.onDeleteClick(position)
+        }
 
         return rowView
+    }
+
+    fun updateData(newList: List<OutdataSongList>) {
+        list = newList
+        notifyDataSetChanged()
+    }
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    interface OnDeleteClickListener {
+        fun onDeleteClick(position: Int)
+    }
+
+    fun setOnItemClickListener(listener: onItemClickListener) {
+        this.itemClickListener = listener
+    }
+
+    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
+        this.deleteClickListener = listener
     }
 }
