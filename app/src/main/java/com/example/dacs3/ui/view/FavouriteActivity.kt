@@ -1,6 +1,7 @@
 package com.example.dacs3.ui.view
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,8 +21,20 @@ class FavouriteActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         supportActionBar?.hide()
+
+
+        binding.toolbarInclude.txtTitle.text = "YÊU THÍCH"
+
+        // Nếu cần xử lý nút back
+        binding.toolbarInclude.imgBack.setOnClickListener {
+            finish()
+        }
+
+        // Xử lý tìm kiếm
+        binding.toolbarInclude.imgSearch.setOnClickListener {
+            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
+        }
 
         adapter = FavouriteAdapter(this, emptyList())
         binding.lvMusicFav.adapter = adapter

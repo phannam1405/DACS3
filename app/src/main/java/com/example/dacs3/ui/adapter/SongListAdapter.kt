@@ -1,6 +1,7 @@
 package com.example.dacs3.ui.adapter
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.dacs3.data.model.OutdataSongList
 import com.example.dacs3.R
+import com.example.dacs3.ui.view.PlayerActivity
 
 class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
 
@@ -18,7 +20,6 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
 
     interface onItemClickListenner {
         fun onItemClick(position: Int)
-        fun onDownloadClicked(song: OutdataSongList)
         fun onAddPlaylist(song: OutdataSongList)
     }
 
@@ -32,15 +33,13 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         val btnDownload: ImageView = itemView.findViewById(R.id.btnDownload)
         val imgSong: ImageView = itemView.findViewById(R.id.imgSong)
         val txtSongName: TextView = itemView.findViewById(R.id.txtSongName)
-        val btnAddPl:ImageView = itemView.findViewById(R.id.btnAddtoPlaylist)
     }
 
     // Tạo view holder cho mỗi item trong danh sách
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.custome_song_list, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.custom_song_list, parent, false)
         return SongViewHolder(itemView)
     }
-
 
     // Gắn dữ liệu cho từng item trong danh sách
     override fun onBindViewHolder(holder: SongViewHolder, @SuppressLint("RecyclerView") position: Int) {
@@ -56,33 +55,9 @@ class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Ad
         holder.txtSongName.text = song.song_name
 
 
-
-
         // Xử lý khi click vào từng item
         holder.itemView.setOnClickListener {
             mListener.onItemClick(position)
         }
-
-
-        // Hiển thị nút download nếu item đang được chọn
-        holder.btnDownload.visibility = if (selectedPosition == position) View.VISIBLE else View.GONE
-
-        // Xử lý khi giữ lâu vào item
-        holder.itemView.setOnLongClickListener {
-            selectedPosition = position
-            notifyDataSetChanged()
-            true
-        }
-
-        // Xử lý khi bấm vào nút download
-        holder.btnDownload.setOnClickListener {
-            mListener.onDownloadClicked(song)
-        }
-
-        holder.btnAddPl.setOnClickListener {
-            mListener.onAddPlaylist(song)
-        }
-
-
     }
 }

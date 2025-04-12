@@ -7,12 +7,21 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.dacs3.data.model.Music
+import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.repository.MusicRepository
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
-
-
     private val dbrefPlaylist = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Playlist")
@@ -31,6 +40,12 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private val _currentPosition = MutableLiveData<Int>()
     val currentPosition: LiveData<Int> = _currentPosition
 
+    private val _mediaPlayerPrepared = MutableLiveData<Int>()
+    val mediaPlayerPrepared: LiveData<Int> = _mediaPlayerPrepared
+
+
+    private val musicRepository = MusicRepository(application)
+
     fun prepareMediaPlayer(audio: String?, uri: String?) {
         releaseMediaPlayer() // Giải phóng MediaPlayer
         mediaPlayer = MediaPlayer()
@@ -48,12 +63,14 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
                 mediaPlayer?.setOnPreparedListener {
                     _duration.postValue(it.duration)
                     _isPlaying.postValue(false)
+                    _mediaPlayerPrepared.postValue(it.audioSessionId)  // Gửi audioSessionId
                 }
             }
         } catch (e: IOException) {
             Log.e("PlayerViewModel", "Lỗi khi chuẩn bị MediaPlayer", e)
         }
     }
+
 
     fun play() {
         mediaPlayer?.let {
@@ -65,6 +82,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+
     fun pause() {
         mediaPlayer?.let {
             if (it.isPlaying) {
@@ -73,6 +91,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
     }
+
 
     fun seekTo(position: Int) {
         mediaPlayer?.seekTo(position)
@@ -92,7 +111,57 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         mediaPlayer = null
     }
 
+    fun downloadSong(song: OutdataSongList, onComplete: (Boolean) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val client = OkHttpClient()
+            val downloadedPaths = mutableMapOf<String, String>()
+            var hasFailed = false
 
+            val downloadTasks = listOfNotNull(
+                song.audio?.let { it to "${song.song_name?.replace(" ", "_") ?: "default_song"}.mp3" },
+                song.image?.let { it to "cover_${song.song_name?.replace(" ", "_") ?: "default"}.jpg" },
+                song.singer_image?.let { it to "singer_${song.song_name?.replace(" ", "_") ?: "default"}.jpg" }
+            )
+
+            for ((url, fileName) in downloadTasks) {
+                try {
+                    val request = Request.Builder().url(url).build()
+                    val response = client.newCall(request).execute()
+
+                    if (response.isSuccessful) {
+                        val file = File(getApplication<Application>().getExternalFilesDir(null), fileName)
+                        response.body?.byteStream()?.use { input ->
+                            FileOutputStream(file).use { output -> input.copyTo(output) }
+                        }
+                        downloadedPaths[url] = file.absolutePath
+                    } else {
+                        hasFailed = true
+                    }
+                } catch (e: Exception) {
+                    hasFailed = true
+                }
+            }
+
+            withContext(Dispatchers.Main) {
+                saveToDatabase(song, downloadedPaths[song.audio] ?: "", downloadedPaths[song.image] ?: "", downloadedPaths[song.singer_image] ?: "")
+                onComplete(!hasFailed)
+            }
+        }
+    }
+
+    private fun saveToDatabase(song: OutdataSongList, filePath: String, coverPath: String, singerPath: String) {
+        val music = Music(
+            songName = song.song_name ?: "Unknown",
+            coverImage = coverPath,
+            localAudioPath = filePath,
+            singerImage = singerPath,
+            cate = song.cate ?: "Unknown",
+            singer_name = song.singer_name ?: "Unknown"
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            musicRepository.insertMusic(music)
+        }
+    }
 
 
 

@@ -20,10 +20,10 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
 
     val playlist: LiveData<List<OutdataSongList>> get() = _playlists
 
-
     private val dbrefPlaylist = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Playlist")
+
     private val dbrefSongs = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Song")
@@ -43,7 +43,6 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         dbrefPlaylist.child(playlistId).child("songs").get().addOnSuccessListener { snapshot ->
             val songIds = snapshot.children.filter { it.value == true }  // Chọn chỉ các bài hát có giá trị "true"
                 .mapNotNull { it.key }  // Lấy songId
-
             val songList = mutableListOf<OutdataSongList>()
             val total = songIds.size
             var loaded = 0
@@ -70,8 +69,6 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
     }
 
 
-
-
     // Hàm thêm bài nhạc vào playlist
     fun addSongToPlaylist(playlistId: String, musicId: String) {
         val playlistRef = dbrefPlaylist.child(playlistId).child("songs")
@@ -79,6 +76,8 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         // Thêm bài nhạc vào playlist với key là musicId
         playlistRef.child(musicId).setValue(true)
     }
+
+
     fun loadPlaylistsDad() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         dbrefPlaylist.get().addOnSuccessListener { snapshot ->
@@ -98,6 +97,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
 
 
 
+    // Khi nhấn vào hiển thị ra hộp thoại thêm nhạc vào playlist
     fun showAddSongDialog(context: Context, musicId: String) {
         val playlists = _playlistsDad.value ?: return
         val checkedItems = BooleanArray(playlists.size) { false }
@@ -115,7 +115,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
                         addSongToPlaylist(playlistId, musicId)
                     }
                 }
-                Toast.makeText(context, "Song added to selected playlists", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Đã thêm nhạc vào danh sách yêu thích", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .create()
@@ -133,17 +133,11 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
 
     fun deleteSongFromPlaylist(id: String) {
         val currentPlaylistId = playlistId ?: return
-
         val songRef = dbrefPlaylist.child(currentPlaylistId).child("songs").child(id)
 
         songRef.removeValue()
         layNhacTrongPlaylist(currentPlaylistId)
     }
-
-
-
-
-
 
 }
 

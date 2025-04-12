@@ -6,12 +6,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_account"
+    android:background="@drawable/gradient_background_account"
     android:gravity="center"
     tools:context=".ui.view.LoginActivity">
-
-
-
 
 
         <LinearLayout
@@ -34,7 +31,7 @@
                 android:id="@+id/loginTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="- Login -"
+                android:text="Sign In"
                 android:textAlignment="center"
                 android:textColor="@color/lavender"
                 android:textSize="32sp"
@@ -69,11 +66,38 @@
                 android:padding="8dp"
                 android:textColor="@color/lavender"
                 android:textSize="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_weight="1"
+                    android:src="@drawable/icon_facebook"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_weight="1"
+                    android:src="@drawable/icon_google"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:layout_weight="1"
+                    android:src="@drawable/icon_github"/>
+            </LinearLayout>
+
+
+
             <Button
                 android:id="@+id/buttonLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:background="@drawable/custom_button"
                 android:text="LOGIN" />
 

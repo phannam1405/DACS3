@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item android:id="@+id/itemFav"
         android:title="Favourites"
         android:icon="@drawable/icon_heart"/>
-
     <item android:id="@+id/itemHome"
         android:title="Home"
         android:icon="@drawable/icon_home"/>
-
     <item android:id="@+id/itemPlaylist"
         android:title="Playlists"
         android:icon="@drawable/icon_playlist"/>
     <item android:id="@+id/itemDownload"
         android:title="Download"
-        android:icon="@drawable/down"/>
+        android:icon="@drawable/icon_install"/>
 </menu>

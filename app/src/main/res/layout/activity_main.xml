@@ -4,35 +4,55 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:fitsSystemWindows="true"
+    android:background="@color/blackcurrent"
     tools:context=".ui.view.MainActivity">
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rootLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:clickable="true"
-        android:focusable="true"> <!-- Thêm để bắt sự kiện click -->
+        android:layout_height="match_parent">
 
+        <!-- Toolbar -->
+        <include
+            android:id="@+id/customToolbar"
+            android:layout_margin="10dp"
+            layout="@layout/custom_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Carousel -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/carousel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/customToolbar" />
 
+        <!-- Danh sách bài hát -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvSongList"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingBottom="56dp" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintTop_toBottomOf="@id/carousel"
+            app:layout_constraintVertical_bias="0.009"
+            tools:layout_editor_absoluteX="-14dp" />
 
+
+        <!-- Bottom Navigation View -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@drawable/shape_rounded_all"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_menu" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
     <!-- NavigationView -->

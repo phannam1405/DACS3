@@ -15,6 +15,8 @@ import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 import androidx.activity.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
+import com.example.dacs3.R
+import com.example.dacs3.databinding.CustomToolbar3Binding
 
 class PlaylistChildActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistChildListBinding

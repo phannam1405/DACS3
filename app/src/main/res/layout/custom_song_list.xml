@@ -5,7 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="20dp">
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="15dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -28,22 +29,12 @@
                 android:id="@+id/btnDownload"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter"
-                android:background="@drawable/dow_item"
+                android:background="@drawable/icon_install"
                 android:visibility="gone"
                 android:contentDescription="Download Song"/>
-
-            <ImageView
-                android:id="@+id/btnAddtoPlaylist"
-                android:layout_width="30dp"
-                android:layout_height="40dp"
-
-                android:scaleType="fitCenter"
-                android:background="@drawable/add"
-
-                android:contentDescription="Download Song"/>
+            
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

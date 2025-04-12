@@ -13,6 +13,7 @@ import com.example.dacs3.R
 import com.example.dacs3.data.model.Music
 import com.example.dacs3.data.repository.MusicRepository
 import com.example.dacs3.databinding.ActivityDownloadBinding
+import com.example.dacs3.databinding.CustomToolbar3Binding
 import com.example.dacs3.ui.adapter.DownloadAdapter
 import com.example.dacs3.ui.viewmodel.DownloadViewModel
 
@@ -28,6 +29,18 @@ class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListene
         binding = ActivityDownloadBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        binding.toolbarInclude.txtTitle.text = "NHẠC TẢI XUỐNG"
+
+        // Nếu cần xử lý nút back
+        binding.toolbarInclude.imgBack.setOnClickListener {
+            finish()
+        }
+
+        // Xử lý tìm kiếm
+        binding.toolbarInclude.imgSearch.setOnClickListener {
+            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
+        }
 
         database = MusicDatabase.getInstance(this)
 

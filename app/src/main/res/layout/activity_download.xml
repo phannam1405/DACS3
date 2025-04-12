@@ -6,19 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".FavouriteActivity"
-    android:background="@drawable/background_fav">
+    tools:context=".ui.view.DownloadActivity"
+    android:background="@color/blackcurrent">
 
-    <TextView
-
-        android:layout_marginTop="30dp"
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="36dp"
-        android:text="DOWNLOAD SONGS"
-        android:textColor="@color/purple_700"/>
+    <include
+        android:id="@+id/toolbar_include"
+        layout="@layout/custom_toolbar3"/>
 
     <ListView
         android:layout_width="match_parent"

@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+
                 tools:srcCompat="@tools:sample/avatars" />
 
 
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:padding="8dp"
-                android:src="@drawable/three_dot"
+                android:src="@drawable/icon_3dot"
                 android:layout_gravity="top|end"
                 android:contentDescription="More options" />
         </FrameLayout>
@@ -46,7 +47,7 @@
         android:id="@+id/txtListTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="55dp"
         android:layout_marginBottom="20dp"
         android:text="Minh gay"
         android:textColor="@color/white" />

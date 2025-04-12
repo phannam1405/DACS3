@@ -35,7 +35,6 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun layThongTinPlaylist() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
         val playlistsQuery = dbref.orderByChild("owner").equalTo(userId)
 
         playlistsQuery.addValueEventListener(object : ValueEventListener {
@@ -72,8 +71,6 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
 
 
     fun AddPlayListInFB(tieuDe: String) {
-
-
         dbref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var maxIndex = 0

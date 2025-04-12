@@ -22,7 +22,17 @@ class PlaylistDadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        supportActionBar?.hide()
+        binding.toolbarInclude.txtTitle.text = "DANH SÁCH PHÁT"
+
+        // Nếu cần xử lý nút back
+        binding.toolbarInclude.imgBack.setOnClickListener {
+            finish()
+        }
+
+        // Xử lý tìm kiếm
+        binding.toolbarInclude.imgSearch.setOnClickListener {
+            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
+        }
 
         viewModel = ViewModelProvider(this).get(PlayListDadViewModel::class.java)
 
