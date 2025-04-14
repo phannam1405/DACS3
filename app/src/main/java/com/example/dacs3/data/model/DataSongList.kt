@@ -2,7 +2,7 @@ package com.example.dacs3.data.model
 
 import java.io.Serializable
 
-data class OutdataSongList(
+data class DataSongList(
     var id: String? = null,
     val song_name: String? = null,
     val singer_name: String? = null,

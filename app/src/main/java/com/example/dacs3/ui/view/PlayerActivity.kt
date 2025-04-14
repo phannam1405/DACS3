@@ -1,22 +1,19 @@
 package com.example.dacs3.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.dacs3.databinding.ActivityPlayerBinding
 import com.example.dacs3.ui.viewmodel.PlayerViewModel
 import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.media.audiofx.Visualizer
 import android.view.View
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import com.example.dacs3.R
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.ui.viewmodel.FavouriteViewModel
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
@@ -54,7 +51,7 @@ class PlayerActivity : AppCompatActivity() {
         val audio = intent.getStringExtra("audio")
         //val uri = intent.getStringExtra("uri")
         val name = intent.getStringExtra("song_name")
-        val song = intent.getSerializableExtra("song") as? OutdataSongList
+        val song = intent.getSerializableExtra("song") as? DataSongList
 
         val songId = intent.getStringExtra("song_id")
 

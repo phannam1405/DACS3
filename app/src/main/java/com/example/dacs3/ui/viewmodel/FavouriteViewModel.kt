@@ -1,10 +1,9 @@
 package com.example.dacs3.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,8 +12,8 @@ import com.google.firebase.database.ValueEventListener
 
 class FavouriteViewModel : ViewModel() {
 
-    private val _favourites = MutableLiveData<List<OutdataSongList>>()
-    val favourites: LiveData<List<OutdataSongList>> = _favourites
+    private val _favourites = MutableLiveData<List<DataSongList>>()
+    val favourites: LiveData<List<DataSongList>> = _favourites
 
 
     private val dbrefFav = FirebaseDatabase.getInstance(
@@ -41,12 +40,12 @@ class FavouriteViewModel : ViewModel() {
                 }
             }
 
-            val songList = mutableListOf<OutdataSongList>()
+            val songList = mutableListOf<DataSongList>()
             dbrefSongs.get().addOnSuccessListener { allSongsSnapshot ->
                 for (songSnapshot in allSongsSnapshot.children) {
                     val songId = songSnapshot.key
                     if (songId in favSongIds) {
-                        val song = songSnapshot.getValue(OutdataSongList::class.java)
+                        val song = songSnapshot.getValue(DataSongList::class.java)
                         song?.let {
                             it.id = songId // GẮN id TỪ key node vào đây
                             songList.add(it)

@@ -3,12 +3,10 @@ package com.example.dacs3.ui.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.helper.widget.Carousel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.ActivityMainBinding
 import com.example.dacs3.ui.adapter.SongListAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
@@ -39,6 +37,10 @@ class MainActivity : AppCompatActivity() {
         binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvSongList.setHasFixedSize(true)
         CarouselSnapHelper().attachToRecyclerView(binding.rvSongList)
+
+        binding.customToolbar.imgAvatar.setOnClickListener{
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
 
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
-                override fun onAddPlaylist(song: OutdataSongList) {
+                override fun onAddPlaylist(song: DataSongList) {
                     song.id?.let {
                         viewModelChild.loadPlaylistsDad()
                         viewModelChild.showAddSongDialog(this@MainActivity, it)

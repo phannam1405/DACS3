@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dacs3.data.model.Music
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.data.repository.MusicRepository
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -111,7 +111,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         mediaPlayer = null
     }
 
-    fun downloadSong(song: OutdataSongList, onComplete: (Boolean) -> Unit) {
+    fun downloadSong(song: DataSongList, onComplete: (Boolean) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val client = OkHttpClient()
             val downloadedPaths = mutableMapOf<String, String>()
@@ -149,7 +149,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    private fun saveToDatabase(song: OutdataSongList, filePath: String, coverPath: String, singerPath: String) {
+    private fun saveToDatabase(song: DataSongList, filePath: String, coverPath: String, singerPath: String) {
         val music = Music(
             songName = song.song_name ?: "Unknown",
             coverImage = coverPath,

@@ -2,20 +2,19 @@ package com.example.dacs3.ui.adapter
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.PopupMenu
-import com.example.dacs3.data.model.OutdataPlaylistDad
+import com.example.dacs3.data.model.DataPlaylistDad
 import com.example.dacs3.R
 
 class PlaylistDadAdapter(
     private val activity: Activity,
-    private var list: List<OutdataPlaylistDad>
-) : ArrayAdapter<OutdataPlaylistDad>(activity, R.layout.custom_playlist_dad_list, list) {
+    private var list: List<DataPlaylistDad>
+) : ArrayAdapter<DataPlaylistDad>(activity, R.layout.custom_playlist_dad_list, list) {
 
     private var itemClickListener: OnItemClickListener? = null
 
@@ -79,7 +78,7 @@ class PlaylistDadAdapter(
     }
 
     // Method to update the list data
-    fun updateData(newList: List<OutdataPlaylistDad>) {
+    fun updateData(newList: List<DataPlaylistDad>) {
         list = newList
         notifyDataSetChanged() // Notify that the data has changed
     }

@@ -8,16 +8,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.dacs3.R
-import com.example.dacs3.data.model.OutdataFav
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 
 class FavouriteAdapter(
     val activity: Activity,
-    var list: List<OutdataSongList>
-) : ArrayAdapter<OutdataSongList>(activity, R.layout.custom_favourite_list, list) {
+    var list: List<DataSongList>
+) : ArrayAdapter<DataSongList>(activity, R.layout.custom_favourite_list, list) {
 
     private var itemClickListener: onItemClickListener? = null
     private var deleteClickListener: OnDeleteClickListener? = null
@@ -70,7 +68,7 @@ class FavouriteAdapter(
         return rowView
     }
 
-    fun updateData(newList: List<OutdataSongList>) {
+    fun updateData(newList: List<DataSongList>) {
         list = newList
         notifyDataSetChanged()
     }

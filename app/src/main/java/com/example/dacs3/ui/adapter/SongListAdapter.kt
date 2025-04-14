@@ -1,7 +1,6 @@
 package com.example.dacs3.ui.adapter
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +8,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.R
-import com.example.dacs3.ui.view.PlayerActivity
 
-class SongListAdapter(private val list: List<OutdataSongList>) : RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
+class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
 
     private lateinit var mListener: onItemClickListenner
     private var selectedPosition: Int = -1 // Lưu vị trí item có nút download
 
     interface onItemClickListenner {
         fun onItemClick(position: Int)
-        fun onAddPlaylist(song: OutdataSongList)
+        fun onAddPlaylist(song: DataSongList)
     }
 
     override fun getItemCount(): Int = list.size

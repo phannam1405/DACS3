@@ -78,6 +78,7 @@
                 android:background="@drawable/custom_edittext"
                 android:inputType="text"
                 android:padding="8dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="40dp"
                 android:hint="Confirm Password"
                 android:textColorHint="@color/lavender"
@@ -91,16 +92,15 @@
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
                 android:background="@drawable/custom_button"
-                android:text="REGISTER" />
+                android:text="SIGN UP" />
 
             <TextView
                 android:id="@+id/txtRe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/lavender"
-                android:text="- Sign Up -"
+                android:text="- Sign In -"
                 android:textSize="20dp"
                 android:layout_marginTop="18dp"
                 android:gravity="center"/>

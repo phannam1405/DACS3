@@ -7,18 +7,17 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dacs3.data.model.OutdataPlaylistDad
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataPlaylistDad
+import com.example.dacs3.data.model.DataSongList
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 class PlaylistChildViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _playlists = MutableLiveData<List<OutdataSongList>>()
-    private val _playlistsDad = MutableLiveData<List<OutdataPlaylistDad>>()
+    private val _playlists = MutableLiveData<List<DataSongList>>()
+    private val _playlistsDad = MutableLiveData<List<DataPlaylistDad>>()
 
-    val playlist: LiveData<List<OutdataSongList>> get() = _playlists
+    val playlist: LiveData<List<DataSongList>> get() = _playlists
 
     private val dbrefPlaylist = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -43,7 +42,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
         dbrefPlaylist.child(playlistId).child("songs").get().addOnSuccessListener { snapshot ->
             val songIds = snapshot.children.filter { it.value == true }  // Chọn chỉ các bài hát có giá trị "true"
                 .mapNotNull { it.key }  // Lấy songId
-            val songList = mutableListOf<OutdataSongList>()
+            val songList = mutableListOf<DataSongList>()
             val total = songIds.size
             var loaded = 0
 
@@ -53,7 +52,7 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
 
             for (songId in songIds) {
                 dbrefSongs.child(songId).get().addOnSuccessListener { songSnap ->
-                    val song = songSnap.getValue(OutdataSongList::class.java)
+                    val song = songSnap.getValue(DataSongList::class.java)
                     song?.let {
                         it.id = songId // gắn id vào key_node
                         songList.add(it)
@@ -81,9 +80,9 @@ class PlaylistChildViewModel(application: Application) : AndroidViewModel(applic
     fun loadPlaylistsDad() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
         dbrefPlaylist.get().addOnSuccessListener { snapshot ->
-            val list = mutableListOf<OutdataPlaylistDad>()
+            val list = mutableListOf<DataPlaylistDad>()
             for (child in snapshot.children) {
-                val playlist = child.getValue(OutdataPlaylistDad::class.java)
+                val playlist = child.getValue(DataPlaylistDad::class.java)
                 val owner = child.child("owner").getValue(String::class.java)
 
                 if (playlist != null && owner == userId) {

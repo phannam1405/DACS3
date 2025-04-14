@@ -11,12 +11,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.dacs3.R
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 
 class PlaylistChildAdapter(
     val activity: Activity,
-    var list: List<OutdataSongList>
-) : ArrayAdapter<OutdataSongList>(activity, R.layout.custom_playlist_child_list, list) {
+    var list: List<DataSongList>
+) : ArrayAdapter<DataSongList>(activity, R.layout.custom_playlist_child_list, list) {
 
     private var itemClickListener: onItemClickListener? = null
     private var deleteClickListener: OnDeleteClickListener? = null
@@ -69,7 +69,7 @@ class PlaylistChildAdapter(
         return rowView
     }
 
-    fun updateData(newList: List<OutdataSongList>) {
+    fun updateData(newList: List<DataSongList>) {
         list = newList
         Log.d("PlaylistChildAdapter", "List data updated, size: ${list.size}")
         notifyDataSetChanged()

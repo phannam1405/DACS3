@@ -3,12 +3,14 @@ package com.example.dacs3.ui.view
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dacs3.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
-
+import com.google.firebase.database.FirebaseDatabase
+import com.example.dacs3.data.model.DataUser
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -59,17 +61,40 @@ class RegisterActivity : AppCompatActivity() {
         mAuth.createUserWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
+                    val uid = task.result.user?.uid  // Lấy trực tiếp từ result
+                    val user = DataUser(
+                        userName = "Test User",
+                        email = email,
+                        phoneNumber = "",
+                        des = "",
+                        avatar = ""
+                    )
+                    if (uid != null) {
+                        val databaseRef = FirebaseDatabase
+                            .getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
+                            .getReference("User")
+                        databaseRef.child(uid).setValue(user)
+                            .addOnCompleteListener { saveTask ->
+                                if (saveTask.isSuccessful) {
+                                    Log.d("FirebaseDB", "Dữ liệu lưu thành công cho UID: $uid")
+                                    Toast.makeText(this, "Đăng ký và lưu thông tin thành công!", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, MainActivity::class.java))
+                                } else {
+                                    Log.e("FirebaseDB", "Lỗi lưu DB: ${saveTask.exception?.message}")
+                                    Toast.makeText(this, "Lưu thông tin người dùng thất bại!", Toast.LENGTH_SHORT).show()
+                                }
+                            }
 
-                    // Chuyển hướng sang MainActivity sau khi đăng ký thành công
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-
+                    } else {
+                        Toast.makeText(this, "Không lấy được UID!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    // Đăng ký thất bại, hiển thị lỗi từ Firebase
                     Toast.makeText(this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show()
+                    android.util.Log.e("FirebaseAuthError", "Lỗi auth: ${task.exception?.message}")
                 }
             }
+
     }
+
 
 }

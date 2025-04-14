@@ -18,12 +18,14 @@
             android:background="@drawable/icon_menu"
             />
         <ImageView
+            android:id="@+id/imgAvatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/icon_avatar"
             />
         <ImageView
+
             android:layout_width="wrap_content"
             android:layout_marginRight="20dp"
             android:background="@drawable/icon_search"

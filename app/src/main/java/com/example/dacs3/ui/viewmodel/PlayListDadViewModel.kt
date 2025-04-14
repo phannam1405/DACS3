@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dacs3.data.database.MusicDatabase
-import com.example.dacs3.data.model.OutdataPlaylistDad
-import com.example.dacs3.data.model.OutdataSongList
-import com.example.dacs3.data.repository.MusicRepository
+import com.example.dacs3.data.model.DataPlaylistDad
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,8 +14,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class PlayListDadViewModel(application: Application) : AndroidViewModel(application) {
-    private val _playlists = MutableLiveData<List<OutdataPlaylistDad>>()
-    val playlist: LiveData<List<OutdataPlaylistDad>> get() = _playlists
+    private val _playlists = MutableLiveData<List<DataPlaylistDad>>()
+    val playlist: LiveData<List<DataPlaylistDad>> get() = _playlists
 
 
 
@@ -39,13 +36,13 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
 
         playlistsQuery.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val playLists = mutableListOf<OutdataPlaylistDad>()
+                val playLists = mutableListOf<DataPlaylistDad>()
                 if (snapshot.exists()) {
                     for (musicSnapshot in snapshot.children) {
-                        val playlist = musicSnapshot.getValue(OutdataPlaylistDad::class.java)
+                        val playlist = musicSnapshot.getValue(DataPlaylistDad::class.java)
                         val id = musicSnapshot.key  // <- lấy key làm id
                         if (playlist != null && id != null) {
-                            val playlistWithId = OutdataPlaylistDad(
+                            val playlistWithId = DataPlaylistDad(
                                 image = playlist.image,
                                 title = playlist.title,
                                 id = id // <- gán id thủ công
@@ -88,7 +85,7 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
                 val newId = "playlist${maxIndex + 1}"
                 val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-                val playlist = OutdataPlaylistDad(
+                val playlist = DataPlaylistDad(
                     owner = userId,
                     title = tieuDe
                 )

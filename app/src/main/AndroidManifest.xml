@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -17,14 +17,17 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.view.ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DACS3" />
+        <activity
             android:name=".ui.view.DownloadActivity"
             android:exported="false"
-            android:theme="@style/Base.Theme.DACS3"
-            />
+            android:theme="@style/Base.Theme.DACS3" />
         <activity
             android:name=".ui.view.PlaylistChildActivity"
-            android:theme="@style/Theme.DACS3"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.DACS3" />
         <activity
             android:name=".ui.view.FavouriteActivity"
             android:exported="false"

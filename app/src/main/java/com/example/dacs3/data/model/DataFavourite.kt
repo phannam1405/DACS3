@@ -1,6 +1,6 @@
 package com.example.dacs3.data.model
 
-data class OutdataFav(
+data class DataFavourite(
     val image: Int,
     val title: String,
     val singer: String,

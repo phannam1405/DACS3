@@ -7,8 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.dacs3.data.model.OutdataPlaylistDad
-import com.example.dacs3.R
 import com.example.dacs3.databinding.ActivityPlaylistDadBinding
 import com.example.dacs3.ui.adapter.PlaylistDadAdapter
 import com.example.dacs3.ui.viewmodel.PlayListDadViewModel

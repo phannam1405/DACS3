@@ -49,6 +49,8 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation ("com.google.android.material:material:1.11.0")
+    implementation ("com.google.firebase:firebase-database-ktx")
+    implementation ("com.cloudinary:cloudinary-android:2.3.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

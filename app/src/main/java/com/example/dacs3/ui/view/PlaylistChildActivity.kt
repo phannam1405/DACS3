@@ -7,16 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.lifecycle.Observer
-import com.example.dacs3.data.model.OutdataSongList
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.ActivityPlaylistChildListBinding
 import com.example.dacs3.ui.adapter.PlaylistChildAdapter
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
-import androidx.activity.viewModels
 import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.ViewModelProvider
-import com.example.dacs3.R
-import com.example.dacs3.databinding.CustomToolbar3Binding
 
 class PlaylistChildActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistChildListBinding
@@ -48,7 +45,7 @@ class PlaylistChildActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         // Khai báo danh sách bài hát
-        val list = mutableListOf<OutdataSongList>()
+        val list = mutableListOf<DataSongList>()
 
 
 

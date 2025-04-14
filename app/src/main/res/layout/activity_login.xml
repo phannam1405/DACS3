@@ -99,14 +99,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button"
-                android:text="LOGIN" />
+                android:text="SIGN IN" />
 
             <TextView
                 android:id="@+id/txtCA"
                 android:layout_width="match_parent"
                 android:textColor="@color/lavender"
                 android:layout_height="wrap_content"
-                android:text="- Create account -"
+                android:text="- Sign Up -"
                 android:textSize="20dp"
                 android:layout_marginTop="18dp"
                 android:gravity="center"/>

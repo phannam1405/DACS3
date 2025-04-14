@@ -8,10 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.dacs3.data.model.OutdataSongList
 import com.example.dacs3.databinding.ActivityFavouriteBinding
 import com.example.dacs3.ui.adapter.FavouriteAdapter
-import com.example.dacs3.ui.adapter.PlaylistChildAdapter
 import com.example.dacs3.ui.viewmodel.FavouriteViewModel
 
 class FavouriteActivity : AppCompatActivity() {
