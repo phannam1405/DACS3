@@ -34,8 +34,10 @@ class ProfileActivity : AppCompatActivity() {
         binding.btnUpdate.setOnClickListener {
             updateUserProfile()
         }
-        binding.imgAvatar.setOnClickListener {
-            // Mở gallery để chọn ảnh
+        binding.btnReturn.setOnClickListener{
+            finish()
+        }
+        binding.btnPicture.setOnClickListener {
             imagePickerLauncher.launch("image/*")
         }
 
@@ -99,6 +101,7 @@ class ProfileActivity : AppCompatActivity() {
 
                 // Gọi hàm upload ảnh lên Firebase nếu muốn:
                 uploadAvatarToFirebase(uri)
+                loadUserProfile()
             }
         }
     }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.view.FavouriteActivity"
-    android:background="@color/blackcurrent">
+    android:background="@drawable/gradient_background_account">
 
     <include
         android:id="@+id/toolbar_include"

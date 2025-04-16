@@ -8,9 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background_account"
     android:gravity="center"
-    tools:context=".ui.view.RegisterActivity"
->
-
+    tools:context=".ui.view.RegisterActivity">
         <LinearLayout
             android:layout_margin="30dp"
             android:background="@drawable/custom_border"
@@ -19,23 +17,22 @@
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="24dp">
-            >
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="112dp"
                 android:layout_height="108dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/logo_app" />
+                android:src="@drawable/logo_app"  />
 
             <TextView
                 android:id="@+id/loginTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="36sp"
+                android:textSize="28sp"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:textColor="@color/lavender"
+                android:textColor="@color/white"
                 android:text="Sign Up" />
 
 
@@ -49,10 +46,10 @@
                 android:layout_marginTop="40dp"
                 android:hint="Email"
                 android:drawableRight="@drawable/icon_person"
-                android:textColor="@color/lavender"
+                android:textColor="@color/white"
                 android:drawablePadding="8dp"
-                android:textColorHint="@color/lavender"
-                android:textSize="20dp"
+                android:textColorHint="@color/white"
+                android:textSize="12dp"
                 />
 
             <EditText
@@ -64,12 +61,11 @@
                 android:padding="8dp"
                 android:layout_marginTop="40dp"
                 android:hint="Password"
-                android:textColorHint="@color/lavender"
+                android:textColorHint="@color/white"
                 android:drawableRight="@drawable/icon_lock"
-                android:textColor="@color/lavender"
+                android:textColor="@color/white"
                 android:drawablePadding="8dp"
-                android:textSize="20dp"
-                />
+                android:textSize="12dp" />
 
             <EditText
                 android:id="@+id/edtLoginConfirmPwd"
@@ -81,30 +77,29 @@
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="40dp"
                 android:hint="Confirm Password"
-                android:textColorHint="@color/lavender"
+                android:textColorHint="@color/white"
                 android:drawableRight="@drawable/icon_lock"
-                android:textColor="@color/lavender"
+                android:textColor="@color/white"
                 android:drawablePadding="8dp"
-                android:textSize="20dp"
-                />
+                android:textSize="12dp" />
 
             <Button
                 android:id="@+id/btnRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_button"
+                android:layout_marginTop="8dp"
                 android:text="SIGN UP" />
 
             <TextView
                 android:id="@+id/txtRe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/lavender"
-                android:text="- Sign In -"
-                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text=" Sign In "
+                android:textSize="16dp"
                 android:layout_marginTop="18dp"
                 android:gravity="center"/>
-
 
         </LinearLayout>
 

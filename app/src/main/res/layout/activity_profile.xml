@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="20dp"
     tools:context=".ui.view.ProfileActivity"
-    android:background="@color/blackcurrent"
+    android:background="@drawable/gradient_background_profile"
     android:gravity="center_horizontal">
 
     <LinearLayout
@@ -27,7 +26,16 @@
             android:orientation="horizontal"
             tools:context=".ui.view.ProfileActivity">
 
-
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginBottom="6dp"
+                android:src="@drawable/icon_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
             <ImageButton
                 android:id="@+id/btnReturn"
                 android:layout_width="wrap_content"
@@ -38,17 +46,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_margin="16dp" />
 
-
-            <ImageView
-                android:id="@+id/imgAvatar"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginBottom="6dp"
-                android:src="@drawable/icon_avatar"
+            <ImageButton
+                android:id="@+id/btnPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_picture"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_margin="16dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,28 +65,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nguyễn Văn A"
+            android:padding="10dp"
+            android:background="@drawable/custom_button"
             android:layout_gravity="center"
             android:textColor="@color/white"
             android:textSize="20sp"
-
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
     </LinearLayout>
 
 
-    <ImageButton
-        android:id="@+id/btnUpdate"
-        android:src="@drawable/icon_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="12dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/shape_topbackground"
+        android:padding="15dp"
         android:orientation="vertical">
 
 
@@ -89,25 +89,30 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:text="Email"
-            android:textSize="16sp"
+            android:layout_marginHorizontal="28dp"
+            android:textSize="12sp"
             android:layout_marginBottom="8dp"/>
 
         <TextView
             android:id="@+id/txtEmail"
             android:layout_width="match_parent"
-            android:textSize="24dp"
+            android:textSize="16dp"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
+            android:padding="15dp"
             android:textColor="@color/white"
+            android:background="@drawable/custom_edittext"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"/>
 
 
         <TextView
             android:layout_width="match_parent"
+            android:layout_marginHorizontal="28dp"
             android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:text="SĐT"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:layout_marginBottom="8dp"/>
 
         <EditText
@@ -115,7 +120,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
-            android:textSize="24dp"
+            android:textSize="16dp"
+            android:padding="15dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/custom_edittext"
             android:textColor="@color/white"
             android:layout_marginBottom="16dp"/>
 
@@ -123,7 +131,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Địa chỉ"
-            android:textSize="16sp"
+            android:textSize="12sp"
+            android:layout_marginHorizontal="28dp"
             android:textColor="@color/white"
             android:layout_marginBottom="8dp"/>
 
@@ -131,7 +140,10 @@
             android:id="@+id/edtDiachi"
             android:layout_width="match_parent"
             android:textColor="@color/white"
-            android:textSize="24dp"
+            android:padding="15dp"
+            android:textSize="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/custom_edittext"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"/>
 
@@ -140,18 +152,29 @@
             android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:text="Mô tả"
-            android:textSize="16sp"
+            android:layout_marginHorizontal="28dp"
+            android:textSize="12sp"
             android:layout_marginBottom="8dp"/>
 
         <EditText
             android:id="@+id/edtMota"
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="15dp"
             android:textColor="@color/white"
-            android:textSize="24dp"
+            android:background="@drawable/custom_edittext"
+            android:textSize="16dp"
             android:layout_marginBottom="16dp"/>
 
-
+        <ImageButton
+            android:id="@+id/btnUpdate"
+            android:src="@drawable/icon_update"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent" />
     </LinearLayout>
 
 

@@ -21,28 +21,25 @@ class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapt
         fun onAddPlaylist(song: DataSongList)
     }
 
-    override fun getItemCount(): Int = list.size
+    // Lấy tối đa 10 bài hát từ danh sách
+    override fun getItemCount(): Int = if (list.size > 10) 10 else list.size
 
     fun setOnItemClickListenner(clickListenner: onItemClickListenner) {
         mListener = clickListenner
     }
 
     class SongViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val btnDownload: ImageView = itemView.findViewById(R.id.btnDownload)
         val imgSong: ImageView = itemView.findViewById(R.id.imgSong)
         val txtSongName: TextView = itemView.findViewById(R.id.txtSongName)
     }
 
-    // Tạo view holder cho mỗi item trong danh sách
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.custom_song_list, parent, false)
         return SongViewHolder(itemView)
     }
 
-    // Gắn dữ liệu cho từng item trong danh sách
-    override fun onBindViewHolder(holder: SongViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
         val song = list[position]
-
 
         // Thu viện lấy ảnh theo URL
         Glide.with(holder.itemView.context)
@@ -51,7 +48,6 @@ class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapt
             .error(R.drawable.error)
             .into(holder.imgSong)
         holder.txtSongName.text = song.song_name
-
 
         // Xử lý khi click vào từng item
         holder.itemView.setOnClickListener {
