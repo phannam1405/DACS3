@@ -54,7 +54,6 @@ class ProfileActivity : AppCompatActivity() {
                 binding.edtName.setText(snapshot.child("userName").value?.toString() ?: "")
                 binding.txtEmail.text = snapshot.child("email").value?.toString() ?: ""
                 binding.edtSDT.setText(snapshot.child("phoneNumber").value?.toString() ?: "")
-                binding.edtDiachi.setText(snapshot.child("address").value?.toString() ?: "")
                 binding.edtMota.setText(snapshot.child("des").value?.toString() ?: "")
 
                 val avatarUrl = snapshot.child("avatarUrl").value?.toString()

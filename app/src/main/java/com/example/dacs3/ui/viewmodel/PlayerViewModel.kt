@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.dacs3.data.model.Music
 import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.data.repository.MusicRepository
-import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,13 +21,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
-    private val dbrefPlaylist = FirebaseDatabase.getInstance(
-        "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
-    ).getReference("Playlist")
-    private val dbrefSongs = FirebaseDatabase.getInstance(
-        "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
-    ).getReference("Song")
-
     private var mediaPlayer: MediaPlayer? = null
 
     private val _isPlaying = MutableLiveData<Boolean>()
@@ -41,13 +33,11 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     val currentPosition: LiveData<Int> = _currentPosition
 
     private val _mediaPlayerPrepared = MutableLiveData<Int>()
-    val mediaPlayerPrepared: LiveData<Int> = _mediaPlayerPrepared
-
 
     private val musicRepository = MusicRepository(application)
 
     fun prepareMediaPlayer(audio: String?) {
-        releaseMediaPlayer() // Giải phóng MediaPlayer
+        releaseMediaPlayer()
         mediaPlayer = MediaPlayer()
 
         try {
