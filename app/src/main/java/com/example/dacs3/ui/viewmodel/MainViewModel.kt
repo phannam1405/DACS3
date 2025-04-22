@@ -18,7 +18,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _songs = MutableLiveData<List<DataSongList>>()
     val songs: LiveData<List<DataSongList>> get() = _songs
 
-    private val musicRepository = MusicRepository(application)
+    private val _searchResults = MutableLiveData<List<DataSongList>>()
+    val searchResults: LiveData<List<DataSongList>> get() = _searchResults
 
     private val dbref: DatabaseReference = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -50,4 +51,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
+
+
+    fun searchSongs(query: String) {
+        val queryLower = query.lowercase().trim()
+        if (queryLower.isEmpty()) {
+            _searchResults.postValue(emptyList())
+            return
+        }
+
+        dbref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val results = mutableListOf<DataSongList>()
+                for (musicSnapshot in snapshot.children) {
+                    val song = musicSnapshot.getValue(DataSongList::class.java)?.apply {
+                        id = musicSnapshot.key
+                    }
+
+                    // Kiểm tra không phân biệt hoa thường và không dấu
+                    val matches = song?.let {
+                        it.song_name?.lowercase()?.contains(queryLower) == true ||
+                                it.singer_name?.lowercase()?.contains(queryLower) == true
+                    } ?: false
+
+                    if (matches) {
+                        song?.let { results.add(it) }
+                    }
+                }
+                Log.d("SearchDebug", "Found ${results.size} results for query: $query")
+                _searchResults.postValue(results)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Search error: ${error.message}")
+            }
+        })
+    }
+
+
 }

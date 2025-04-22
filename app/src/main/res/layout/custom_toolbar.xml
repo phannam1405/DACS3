@@ -7,29 +7,12 @@
     android:background="@drawable/shape_rounded_all"
     android:layout_margin="10dp"
     android:layout_height="wrap_content">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:padding="13dp"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/icon_menu"
-            />
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/icon_avatar"
-            />
-        <ImageView
 
-            android:layout_width="wrap_content"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/icon_search"
-            android:layout_alignParentRight="true"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:queryHint="Tìm kiếm bài hát..."
+            android:iconifiedByDefault="false" />
+
 </RelativeLayout>
