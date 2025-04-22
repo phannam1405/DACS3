@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background_account"
+    android:background="@drawable/background_color"
     android:gravity="center"
     tools:context=".ui.view.LoginActivity">
 
@@ -30,8 +30,9 @@
 
             <TextView
                 android:id="@+id/txtTitle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Sign In"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -42,7 +43,7 @@
                 android:id="@+id/edtLoginUsername"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/custom_edittext"
                 android:drawableRight="@drawable/icon_person"
                 android:drawablePadding="8dp"

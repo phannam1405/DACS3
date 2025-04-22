@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/gradient_background_account"
+    android:background="@drawable/background_color2"
     tools:context=".ui.view.PlayerActivity">
 
 
@@ -36,8 +36,8 @@
                 <!-- Hình tròn lớn -->
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imgSong"
-                    android:layout_width="290dp"
-                    android:layout_height="290dp"
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
                     android:padding="10dp"
                     android:src="@mipmap/music_player_icon"
                     android:scaleType="centerCrop"
@@ -104,7 +104,7 @@
                     android:id="@+id/startTime"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:gravity="center"
                     android:textSize="15sp"
                     android:text="@string/start_tv"/>
@@ -112,13 +112,12 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:id="@+id/seekBar"
-
                     android:layout_height="match_parent"/>
                 <TextView
                     android:id="@+id/endTime"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:gravity="center"
                     android:textSize="15sp"
                     android:text="@string/end_tv"/>
