@@ -11,6 +11,7 @@
     tools:context=".ui.view.LoginActivity">
 
 
+
         <LinearLayout
             android:layout_margin="30dp"
             android:background="@drawable/custom_border"
@@ -20,25 +21,38 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="112dp"
-                android:layout_height="108dp"
-                android:layout_gravity="center"
-                android:src="@drawable/logo_app" />
 
-
-            <TextView
-                android:id="@+id/txtTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Sign In"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
+                <ImageButton
+                    android:id="@+id/btnDowloaded"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/icon_install" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="112dp"
+                    android:layout_height="108dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/logo_app" />
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Sign In"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="28sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
             <EditText
                 android:id="@+id/edtLoginUsername"
                 android:layout_width="match_parent"
@@ -85,7 +99,7 @@
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/custom_button"
+                android:background="@drawable/custom_button_selector"
                 android:text="SIGN IN" />
 
             <TextView

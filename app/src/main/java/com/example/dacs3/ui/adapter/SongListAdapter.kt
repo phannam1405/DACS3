@@ -14,7 +14,6 @@ import com.example.dacs3.R
 class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapter<SongListAdapter.SongViewHolder>() {
 
     private lateinit var mListener: onItemClickListenner
-    private var selectedPosition: Int = -1 // Lưu vị trí item có nút download
 
     interface onItemClickListenner {
         fun onItemClick(position: Int)

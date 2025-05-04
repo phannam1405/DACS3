@@ -68,11 +68,6 @@ class FavouriteAdapter(
         return rowView
     }
 
-    fun updateData(newList: List<DataSongList>) {
-        list = newList
-        notifyDataSetChanged()
-    }
-
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }

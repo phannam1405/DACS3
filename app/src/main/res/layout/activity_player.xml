@@ -79,14 +79,16 @@
                     app:icon="@drawable/icon_pre_song"
                     app:iconSize="40dp"
                     android:layout_height="wrap_content"/>
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/btnPlayPause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btnPlayPause"
+                    android:layout_marginHorizontal="25dp"
                     app:icon="@drawable/icon_pause"
                     app:iconSize="50dp"
-                    app:shapeAppearanceOverlay="@style/curved"
-                    android:layout_marginHorizontal="25dp"/>
+                    app:shapeAppearanceOverlay="@style/curved" />
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -51,6 +51,8 @@ dependencies {
     implementation ("com.google.android.material:material:1.11.0")
     implementation ("com.google.firebase:firebase-database-ktx")
     implementation ("com.cloudinary:cloudinary-android:2.3.1")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

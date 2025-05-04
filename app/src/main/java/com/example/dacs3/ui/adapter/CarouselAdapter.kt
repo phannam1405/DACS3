@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dacs3.databinding.CustomCarouselBinding
-class AdapterCarousel(private val imageList: MutableList<Int>) :
-    RecyclerView.Adapter<AdapterCarousel.CarouselViewHolder>(){
+class CarouselAdapter(private val imageList: MutableList<Int>) :
+    RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>(){
 
 inner class CarouselViewHolder(private val binding: CustomCarouselBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(image : Int){

@@ -11,18 +11,20 @@
         android:layout_width="match_parent"
         android:padding="13dp"
         android:layout_height="wrap_content">
-        <ImageView
+        <ImageButton
             android:id="@+id/btnReturn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/icon_return" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/icon_return" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btnHeart"
             android:layout_width="wrap_content"
             android:layout_marginRight="20dp"
-            android:background="@drawable/icon_heart"
+            android:src="@drawable/icon_heart"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_alignParentRight="true"
             android:layout_height="wrap_content"/>
     </RelativeLayout>

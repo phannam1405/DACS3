@@ -33,9 +33,7 @@ class DownloadAdapter(
     override fun getCount(): Int = list.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val context = activity.layoutInflater
         val rowView = convertView ?: LayoutInflater.from(activity).inflate(R.layout.custom_down, parent, false)
-
         val images = rowView.findViewById<ImageView>(R.id.imgMusic)
         val title = rowView.findViewById<TextView>(R.id.txtTitle)
         val singer = rowView.findViewById<TextView>(R.id.txtSinger)

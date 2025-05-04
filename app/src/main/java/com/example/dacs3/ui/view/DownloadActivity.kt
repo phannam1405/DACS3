@@ -37,11 +37,6 @@ class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListene
             finish()
         }
 
-        // Xử lý tìm kiếm
-        binding.toolbarInclude.imgSearch.setOnClickListener {
-            Toast.makeText(this, "Search clicked", Toast.LENGTH_SHORT).show()
-        }
-
         database = MusicDatabase.getInstance(this)
 
         res = MusicRepository(application)
@@ -71,7 +66,6 @@ class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListene
                 val intent = Intent(this@DownloadActivity, PlayerActivity::class.java)
                 intent.putExtra("image", it.coverImage)
                 intent.putExtra("audio", it.localAudioPath)
-                Log.d("DownloadActivity", "localAudioPath: ${it.localAudioPath}")
                 intent.putExtra("song_name", it.songName)
                 startActivity(intent)
             } else {
@@ -79,6 +73,4 @@ class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListene
             }
         } ?: Toast.makeText(this, "Vị trí không hợp lệ!", Toast.LENGTH_SHORT).show()
     }
-
-
 }

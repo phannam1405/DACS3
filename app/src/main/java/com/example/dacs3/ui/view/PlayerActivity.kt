@@ -1,62 +1,95 @@
 package com.example.dacs3.ui.view
 
-import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.example.dacs3.databinding.ActivityPlayerBinding
-import com.example.dacs3.ui.viewmodel.PlayerViewModel
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.media.audiofx.Visualizer
+import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.dacs3.R
 import com.example.dacs3.data.model.DataSongList
+import com.example.dacs3.databinding.ActivityPlayerBinding
 import com.example.dacs3.ui.viewmodel.FavouriteViewModel
+import com.example.dacs3.ui.viewmodel.PlayerViewModel
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 
-
 class PlayerActivity : AppCompatActivity() {
+
+    // View Binding để thao tác với layout
     private lateinit var binding: ActivityPlayerBinding
+
+    // ViewModel điều khiển phát nhạc
     private val viewModel: PlayerViewModel by viewModels()
-    private lateinit var rotateAnimator: ObjectAnimator
+
+    // ViewModel quản lý danh sách phát
     private val playlistViewModel: PlaylistChildViewModel by viewModels()
+
+    // ViewModel quản lý bài hát yêu thích
     private val favViewModel: FavouriteViewModel by viewModels()
+
+    // Animation xoay ảnh đĩa
+    private lateinit var rotateAnimator: ObjectAnimator
+
+    // Hiệu ứng âm thanh (hiện chưa dùng)
     private var visualizer: Visualizer? = null
 
+    // Hàm khởi tạo Activity
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.toolbarInclude.btnReturn.setOnClickListener{
+
+        // Khởi tạo Toolbar
+        setupToolbar()
+
+        // Khởi tạo animation xoay ảnh
+        setupRotationAnimator()
+
+        // Khởi tạo dữ liệu bài hát
+        setupSongData()
+
+        // Khởi tạo các điều khiển phát nhạc
+        setupPlayerControls()
+
+        // Khởi tạo nút tải bài hát về thiết bị
+        setupDownloadButton()
+
+        // Khởi tạo nút thêm bài hát vào danh sách phát
+        setupPlaylistButton()
+    }
+
+    // Xử lý nút trở về trong Toolbar
+    private fun setupToolbar() {
+        binding.toolbarInclude.btnReturn.setOnClickListener {
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
         }
+    }
 
-
-        // Xoay đĩa nhạc
+    // Thiết lập animation xoay cho ảnh bài hát
+    private fun setupRotationAnimator() {
         rotateAnimator = ObjectAnimator.ofFloat(binding.imgSong, View.ROTATION, 0f, 360f).apply {
             duration = 4000L
             repeatCount = ValueAnimator.INFINITE
             interpolator = LinearInterpolator()
         }
+    }
 
-
-
+    // Thiết lập dữ liệu bài hát (tên, ảnh, audio) và trạng thái yêu thích
+    private fun setupSongData() {
         val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
-        //val uri = intent.getStringExtra("uri")
         val name = intent.getStringExtra("song_name")
-        val song = intent.getSerializableExtra("song") as? DataSongList
-
         val songId = intent.getStringExtra("song_id")
 
-        //check xem đã tim chưa để set tim đầy hoặc rỗng
+        binding.songName.text = name
+        Glide.with(this).load(imageSong).into(binding.imgSong)
 
+        // Xử lý trạng thái yêu thích
         songId?.let { id ->
             favViewModel.isSongFavourite(id) { isFav ->
                 var isCurrentlyFav = isFav
@@ -70,29 +103,25 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-
-
-
-        binding.songName.text = name
-        Glide.with(this).load(imageSong).into(binding.imgSong)
-
+        // Phát nhạc
         viewModel.prepareMediaPlayer(audio)
+    }
 
-        viewModel.duration.observe(this) {
-            binding.seekBar.max = it
-            binding.endTime.text = formatTime(it)
+    // Thiết lập các điều khiển phát nhạc: play, pause, seekBar, thời gian
+    private fun setupPlayerControls() {
+        viewModel.duration.observe(this) { duration ->
+            binding.seekBar.max = duration
+            binding.endTime.text = formatTime(duration)
         }
 
-        viewModel.currentPosition.observe(this) {
-            binding.seekBar.progress = it
-            binding.startTime.text = formatTime(it)
+        viewModel.currentPosition.observe(this) { position ->
+            binding.seekBar.progress = position
+            binding.startTime.text = formatTime(position)
         }
 
         viewModel.isPlaying.observe(this) { isPlaying ->
             binding.btnPlayPause.text = if (isPlaying) "Pause" else "Play"
         }
-
-
 
         binding.btnPlayPause.setOnClickListener {
             if (viewModel.isPlaying.value == true) {
@@ -108,60 +137,65 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-
+        // Xử lý kéo SeekBar để tua nhạc
         binding.seekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) viewModel.seekTo(progress)
             }
+
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
         })
+    }
+
+    // Xử lý nút tải bài hát về thiết bị
+    private fun setupDownloadButton() {
+        val song = intent.getSerializableExtra("song") as? DataSongList
 
         binding.btnInstall.setOnClickListener {
             song?.let {
                 binding.btnInstall.isEnabled = false
                 viewModel.downloadSong(it) { success ->
-                    if (success) {
-                        Toast.makeText(this, "Tải xuống thành công", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this, "Tải xuống thất bại", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(
+                        this,
+                        if (success) "Tải xuống thành công" else "Tải xuống thất bại",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
-
-        binding.btnPlaylist.setOnClickListener {
-            song?.id?.let {
-                playlistViewModel.loadPlaylistsDad()
-                playlistViewModel.showAddSongDialog(this@PlayerActivity, it)
-            }
-        }
-
     }
 
-    private fun updateHeartIcon(isFav: Boolean) {
-        val iconRes = if (isFav) {
-            R.drawable.heart_fill_svgrepo_com
-        } else {
-            R.drawable.icon_heart
+    // Xử lý nút thêm bài hát vào danh sách phát
+    private fun setupPlaylistButton() {
+        val song = intent.getSerializableExtra("song") as? DataSongList
+
+        binding.btnPlaylist.setOnClickListener {
+            song?.id?.let { songId ->
+                playlistViewModel.loadPlaylistsDad()
+                playlistViewModel.showAddSongDialog(this@PlayerActivity, songId)
+            }
         }
+    }
+
+    // Cập nhật icon trái tim theo trạng thái yêu thích
+    private fun updateHeartIcon(isFav: Boolean) {
+        val iconRes = if (isFav) R.drawable.heart_fill_svgrepo_com else R.drawable.icon_heart
         binding.toolbarInclude.btnHeart.setImageResource(iconRes)
     }
 
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.releaseMediaPlayer()
-        visualizer?.release()
-        visualizer = null
-    }
-
-
+    // Định dạng thời gian từ milliseconds thành mm:ss
     private fun formatTime(millis: Int): String {
         val minutes = (millis / 1000) / 60
         val seconds = (millis / 1000) % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
 
+    // Giải phóng tài nguyên khi Activity bị huỷ
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.releaseMediaPlayer()
+        visualizer?.release()
+        visualizer = null
+    }
 }

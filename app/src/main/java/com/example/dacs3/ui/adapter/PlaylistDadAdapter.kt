@@ -43,7 +43,7 @@ class PlaylistDadAdapter(
 
         // Set image and title for the current row
         val currentItem = list[position]
-        holder.imageView.setImageResource(R.drawable.singer_minh_gay)
+        holder.imageView.setImageResource(R.drawable.playlistdad)
         holder.titleView.text = currentItem.title
 
         // Set item click listener
@@ -75,12 +75,6 @@ class PlaylistDadAdapter(
         }
 
         return rowView
-    }
-
-    // Method to update the list data
-    fun updateData(newList: List<DataPlaylistDad>) {
-        list = newList
-        notifyDataSetChanged() // Notify that the data has changed
     }
 
     // Interface for item click listener

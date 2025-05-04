@@ -29,6 +29,33 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         layThongTinKhoNhac()
     }
 
+    fun getSongsByCategory(category: String): LiveData<List<DataSongList>> {
+        val filteredSongs = MutableLiveData<List<DataSongList>>()
+
+        dbref.orderByChild("category").equalTo(category).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val songList = mutableListOf<DataSongList>()
+                if (snapshot.exists()) {
+                    for (musicSnapshot in snapshot.children) {
+                        val song = musicSnapshot.getValue(DataSongList::class.java)
+                        song?.let {
+                            it.id = musicSnapshot.key
+                            songList.add(it)
+                        }
+                    }
+                }
+                filteredSongs.postValue(songList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
+            }
+        })
+
+        return filteredSongs
+    }
+
+
 
     private fun layThongTinKhoNhac() {
         dbref.addValueEventListener(object : ValueEventListener {
@@ -38,14 +65,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     for (musicSnapshot in snapshot.children) {
                         val song = musicSnapshot.getValue(DataSongList::class.java)
                         song?.let {
-                            it.id = musicSnapshot.key  // Gán key của Firebase vào thuộc tính id
+                            it.id = musicSnapshot.key
                             songList.add(it)
                         }
                     }
                 }
                 _songs.postValue(songList)
             }
-
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
             }
@@ -87,6 +113,4 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
-
-
 }

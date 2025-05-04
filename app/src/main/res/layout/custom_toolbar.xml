@@ -12,6 +12,7 @@
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:queryBackground="@android:color/transparent"
             android:queryHint="Tìm kiếm bài hát..."
             android:iconifiedByDefault="false" />
 

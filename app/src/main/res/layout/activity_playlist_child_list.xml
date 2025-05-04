@@ -9,6 +9,9 @@
     tools:context=".ui.view.PlaylistChildActivity"
     android:background="@drawable/background_color2">
 
+    <include
+        android:id="@+id/toolbar_include"
+        layout="@layout/custom_toolbar3" />
 
 
     <ListView
