@@ -36,6 +36,19 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
 
     private val musicRepository = MusicRepository(application)
 
+    private var currentSongIndex = 0
+    private var songsList: List<DataSongList> = emptyList()
+
+    fun setSongsList(songs: List<DataSongList>) {
+        songsList = songs
+    }
+    fun getCurrentSongIndex(): Int = currentSongIndex
+    fun setCurrentSongIndex(index: Int) {
+        currentSongIndex = index
+    }
+
+
+
     fun prepareMediaPlayer(audio: String?) {
         releaseMediaPlayer()
         mediaPlayer = MediaPlayer()
@@ -108,9 +121,9 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             var hasFailed = false
 
             val downloadTasks = listOfNotNull(
-                song.audio?.let { it to "${song.song_name?.replace(" ", "_") ?: "default_song"}.mp3" },
-                song.image?.let { it to "cover_${song.song_name?.replace(" ", "_") ?: "default"}.jpg" },
-                song.singer_image?.let { it to "singer_${song.song_name?.replace(" ", "_") ?: "default"}.jpg" }
+                song.audio?.let { it to "${song.songName?.replace(" ", "_") ?: "default_song"}.mp3" },
+                song.image?.let { it to "cover_${song.songName?.replace(" ", "_") ?: "default"}.jpg" },
+                song.singerImage?.let { it to "singer_${song.songName?.replace(" ", "_") ?: "default"}.jpg" }
             )
 
             for ((url, fileName) in downloadTasks) {
@@ -133,27 +146,27 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             withContext(Dispatchers.Main) {
-                saveToDatabase(song, downloadedPaths[song.audio] ?: "", downloadedPaths[song.image] ?: "", downloadedPaths[song.singer_image] ?: "")
+                saveToDatabase(song, downloadedPaths[song.audio] ?: "", downloadedPaths[song.image] ?: "", downloadedPaths[song.singerImage] ?: "")
                 onComplete(!hasFailed)
             }
         }
     }
 
+    fun getSongsList(): List<DataSongList> {
+        return songsList
+    }
+
     private fun saveToDatabase(song: DataSongList, filePath: String, coverPath: String, singerPath: String) {
         val music = Music(
-            songName = song.song_name ?: "Unknown",
+            songName = song.songName ?: "Unknown",
             coverImage = coverPath,
             localAudioPath = filePath,
             singerImage = singerPath,
-            cate = song.cate ?: "Unknown",
-            singer_name = song.singer_name ?: "Unknown"
+            cate = song.category ?: "Unknown",
+            singer_name = song.singerName ?: "Unknown"
         )
         CoroutineScope(Dispatchers.IO).launch {
             musicRepository.insertMusic(music)
         }
     }
-
-
-
-
 }

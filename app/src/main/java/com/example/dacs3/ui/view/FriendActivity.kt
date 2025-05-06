@@ -12,13 +12,13 @@ import com.example.dacs3.databinding.ActivityFriendBinding
 import com.example.dacs3.ui.adapter.FollowAdapter
 import com.example.dacs3.ui.adapter.UserAdapter
 import com.example.dacs3.ui.viewmodel.FollowViewModel
-import com.example.dacs3.ui.viewmodel.UserViewModel
+import com.example.dacs3.ui.viewmodel.FriendViewModel
+
 
 class FriendActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFriendBinding
-    private lateinit var viewModel: UserViewModel
+    private lateinit var viewModel: FriendViewModel
     private lateinit var followViewModel: FollowViewModel
-
     private lateinit var searchAdapter: UserAdapter
     private lateinit var followAdapter: FollowAdapter
 
@@ -31,7 +31,7 @@ class FriendActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Khởi tạo ViewModel
-        viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FriendViewModel::class.java)
         followViewModel = ViewModelProvider(this).get(FollowViewModel::class.java)
 
         // Cài đặt Adapter cho cả 2 RecyclerView

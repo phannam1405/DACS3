@@ -1,5 +1,6 @@
 package com.example.dacs3.ui.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.ListView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dacs3.R
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.ui.adapter.SongGerneAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
 
@@ -33,7 +35,17 @@ class KRFragment : Fragment(R.layout.fragment_k_r) {
             // Cập nhật danh sách bài hát vào adapter
             adapter = SongGerneAdapter(requireContext(), songList)
             lvKrMusic.adapter = adapter
+            adapter.setOnItemClickListener(object : SongGerneAdapter.OnItemClickListener {
+                override fun onItemClick(song: DataSongList) {
+                    val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
+                        putExtra("image", song.image)
+                        putExtra("song_id", song.id)
+                        putExtra("audio", song.audio)
+                        putExtra("song_name", song.songName)
+                        putExtra("song", song)
+                    }
+                    startActivity(intent)
+                }
+            })
         })
-    }
-
-}
+    }}

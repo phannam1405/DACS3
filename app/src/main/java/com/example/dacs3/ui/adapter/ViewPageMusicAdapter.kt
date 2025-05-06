@@ -12,6 +12,8 @@ import com.example.dacs3.ui.view.VNMusicFragment
 
 class ViewPageMusicAdapter(fragManager: FragmentManager, lifecycle: Lifecycle):
     FragmentStateAdapter(fragManager, lifecycle ) {
+
+
     override fun getItemCount(): Int {
         return 5
     }

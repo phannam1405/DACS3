@@ -51,9 +51,9 @@ class FavouriteAdapter(
             .load(currentItem.image)
             .into(holder.imageView)
 
-        holder.titleView.text = currentItem.song_name
-        holder.singerView.text = currentItem.singer_name
-        holder.timeView.text = currentItem.cate
+        holder.titleView.text = currentItem.songName
+        holder.singerView.text = currentItem.singerName
+        holder.timeView.text = currentItem.category
 
         // Click toàn item
         rowView.setOnClickListener {

@@ -94,10 +94,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         id = musicSnapshot.key
                     }
 
-                    // Kiểm tra không phân biệt hoa thường và không dấu
                     val matches = song?.let {
-                        it.song_name?.lowercase()?.contains(queryLower) == true ||
-                                it.singer_name?.lowercase()?.contains(queryLower) == true
+                        it.songName?.lowercase()?.contains(queryLower) == true ||
+                                it.singerName?.lowercase()?.contains(queryLower) == true
                     } ?: false
 
                     if (matches) {

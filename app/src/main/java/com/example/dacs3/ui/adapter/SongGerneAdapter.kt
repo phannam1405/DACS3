@@ -16,6 +16,16 @@ class SongGerneAdapter(
     private var songList: List<DataSongList>
 ) : BaseAdapter() {
 
+    interface OnItemClickListener {
+        fun onItemClick(song: DataSongList)
+    }
+
+    private var listener: OnItemClickListener? = null
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
     override fun getCount(): Int = songList.size
 
     override fun getItem(position: Int): Any = songList[position]
@@ -35,18 +45,18 @@ class SongGerneAdapter(
         val txtTime = view?.findViewById<TextView>(R.id.txtTime)
         val imgMusic = view?.findViewById<ImageView>(R.id.imgMusic)
 
-        // Gán giá trị cho các thành phần
-        txtTitle?.text = song.song_name
-        txtSinger?.text = song.singer_name
+        txtTitle?.text = song.songName
+        txtSinger?.text = song.singerName
         txtTime?.text = "4:30"
 
-        // Sử dụng Glide để tải ảnh
         Glide.with(context)
             .load(song.image)
             .into(imgMusic!!)
 
+        view?.setOnClickListener {
+            listener?.onItemClick(song)
+        }
+
         return view!!
     }
-
-
 }

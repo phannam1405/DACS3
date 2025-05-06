@@ -1,5 +1,4 @@
 package com.example.dacs3.ui.viewmodel
-
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -12,7 +11,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class UserViewModel(application: Application) : AndroidViewModel(application) {
+class FriendViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _users = MutableLiveData<List<DataUser>>()
 

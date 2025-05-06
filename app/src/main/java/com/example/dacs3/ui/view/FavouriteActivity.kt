@@ -75,7 +75,7 @@ class FavouriteActivity : AppCompatActivity() {
                     intent.putExtra("image", selectedSong.image)
                     intent.putExtra("song_id", selectedSong.id)
                     intent.putExtra("audio", selectedSong.audio)
-                    intent.putExtra("song_name", selectedSong.song_name)
+                    intent.putExtra("song_name", selectedSong.songName)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this@FavouriteActivity, "oh no", Toast.LENGTH_SHORT).show()

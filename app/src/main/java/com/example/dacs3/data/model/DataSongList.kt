@@ -4,10 +4,11 @@ import java.io.Serializable
 
 data class DataSongList(
     var id: String? = null,
-    val song_name: String? = null,
-    val singer_name: String? = null,
+    val songName: String? = null,
+    val singerName: String? = null,
     val image: String? = null,
-    val singer_image: String? = null,
+    val singerImage: String? = null,
     val audio: String? = null,
-    val cate: String? = null
+    val category: String? = null,
+    val view: Long =0
 ) : Serializable

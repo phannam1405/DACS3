@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.SearchView
 import android.widget.TextView
@@ -34,6 +35,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModelChild: PlaylistChildViewModel
     private lateinit var searchAdapter: SearchAdapter
     private var isSearchMode = false
+    private var songs: List<DataSongList> = emptyList()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         // Khởi tạo ViewModel
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModelChild = ViewModelProvider(this).get(PlaylistChildViewModel::class.java)
+
 
         // Khởi tạo layout bài hát
         setupSongList()
@@ -60,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         // Khởi tạo tìm kiếm
         setupSearch()
 
+        // Khởi tạo Danh sach nhac theo the loai
         setupMusicTabGenre()
 
         // Quan sát dữ liệu
@@ -78,11 +84,8 @@ class MainActivity : AppCompatActivity() {
                 4 -> tab.text = "Hàn Quốc"
             }
         }.attach()
-
         binding.viewPagerGenres.isUserInputEnabled = false
     }
-
-
 
     private fun setupSongList() {
         binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -115,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.itemHome -> true
                 R.id.itemFriend -> {
-                    startActivity(Intent(this,FriendActivity::class.java))
+                    startActivity(Intent(this, FriendActivity::class.java))
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     true
                 }
@@ -130,14 +133,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearch() {
-        // Adapter cho kết quả tìm kiếm
         searchAdapter = SearchAdapter { song ->
             val intent = Intent(this, PlayerActivity::class.java).apply {
                 putExtra("image", song.image)
                 putExtra("song_id", song.id)
                 putExtra("audio", song.audio)
-                putExtra("song_name", song.song_name)
+                putExtra("song_name", song.songName)
                 putExtra("song", song)
+                putExtra("song_list", ArrayList(songs))
+
             }
             startActivity(intent)
             exitSearchMode()
@@ -169,8 +173,9 @@ class MainActivity : AppCompatActivity() {
                         putExtra("image", songs[position].image)
                         putExtra("song_id", songs[position].id)
                         putExtra("audio", songs[position].audio)
-                        putExtra("song_name", songs[position].song_name)
+                        putExtra("song_name", songs[position].songName)
                         putExtra("song", songs[position])
+                        putExtra("song_list", ArrayList(songs))
                     }
                     startActivity(intent)
                 }
@@ -271,15 +276,17 @@ class MainActivity : AppCompatActivity() {
         isSearchMode = true
         binding.rVSearch.visibility = View.VISIBLE
         binding.carousel.visibility = View.GONE
-        binding.songListSection.visibility = View.GONE
+
     }
 
     private fun exitSearchMode() {
         isSearchMode = false
         binding.rVSearch.visibility = View.GONE
         binding.carousel.visibility = View.VISIBLE
-        binding.songListSection.visibility = View.VISIBLE
+
     }
+
+
 
     @Deprecated("Deprecated, but still used for back compatibility")
     @Suppress("DEPRECATION")
@@ -310,7 +317,7 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-        override fun onResume() {
+    override fun onResume() {
         super.onResume()
         binding.rVSearch.visibility = View.GONE
         viewModelChild.loadPlaylistsDad()

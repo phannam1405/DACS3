@@ -17,9 +17,9 @@ class SearchAdapter(
 
         fun bind(song: DataSongList) {
             binding.apply {
-                txtTitle.text = song.song_name
-                txtSinger.text = song.singer_name
-                txtTime.text = song.cate
+                txtTitle.text = song.songName
+                txtSinger.text = song.singerName
+                txtTime.text = song.category
 
                 Glide.with(itemView.context)
                     .load(song.image)

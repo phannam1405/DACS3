@@ -34,8 +34,8 @@ class PlayerActivity : AppCompatActivity() {
     // Animation xoay ảnh đĩa
     private lateinit var rotateAnimator: ObjectAnimator
 
-    // Hiệu ứng âm thanh (hiện chưa dùng)
-    private var visualizer: Visualizer? = null
+    private var currentSongIndex = 0
+    private lateinit var songsList: List<DataSongList>
 
     // Hàm khởi tạo Activity
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +60,22 @@ class PlayerActivity : AppCompatActivity() {
 
         // Khởi tạo nút thêm bài hát vào danh sách phát
         setupPlaylistButton()
+
+        val songList = intent.getSerializableExtra("song_list") as? ArrayList<DataSongList>
+        val currentSong = intent.getSerializableExtra("song") as? DataSongList
+
+
+        if (songList != null && currentSong != null) {
+            songsList = songList
+            currentSongIndex = songsList.indexOfFirst { it.id == currentSong.id }
+            viewModel.setSongsList(songsList)
+            viewModel.setCurrentSongIndex(currentSongIndex)
+        }
     }
+
+
+
+
 
     // Xử lý nút trở về trong Toolbar
     private fun setupToolbar() {
@@ -69,6 +84,11 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
     }
+
+
+
+
+
 
     // Thiết lập animation xoay cho ảnh bài hát
     private fun setupRotationAnimator() {
@@ -79,13 +99,14 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    // Thiết lập dữ liệu bài hát (tên, ảnh, audio) và trạng thái yêu thích
+
+
+    // Hàm khởi tạo dữ liệu bài hát
     private fun setupSongData() {
         val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
         val name = intent.getStringExtra("song_name")
         val songId = intent.getStringExtra("song_id")
-
         binding.songName.text = name
         Glide.with(this).load(imageSong).into(binding.imgSong)
 
@@ -103,11 +124,16 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        // Phát nhạc
         viewModel.prepareMediaPlayer(audio)
     }
 
-    // Thiết lập các điều khiển phát nhạc: play, pause, seekBar, thời gian
+
+
+
+
+
+
+    // Hàm xử lý các nút tương tác với các button trong player
     private fun setupPlayerControls() {
         viewModel.duration.observe(this) { duration ->
             binding.seekBar.max = duration
@@ -127,6 +153,7 @@ class PlayerActivity : AppCompatActivity() {
             if (viewModel.isPlaying.value == true) {
                 viewModel.pause()
                 rotateAnimator.pause()
+                binding.btnPlayPause.setIconResource(R.drawable.icon_play)
             } else {
                 viewModel.play()
                 if (!rotateAnimator.isStarted) {
@@ -134,7 +161,16 @@ class PlayerActivity : AppCompatActivity() {
                 } else {
                     rotateAnimator.resume()
                 }
+                binding.btnPlayPause.setIconResource(R.drawable.icon_pause)
             }
+        }
+
+        binding.btnNextSong.setOnClickListener{
+            playNextSong()
+        }
+
+        binding.btnPreSong.setOnClickListener{
+            playPreviousSong()
         }
 
         // Xử lý kéo SeekBar để tua nhạc
@@ -148,7 +184,12 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
-    // Xử lý nút tải bài hát về thiết bị
+
+
+
+
+
+    // Hàm xử lý nút tải bài hát về thiết bị
     private fun setupDownloadButton() {
         val song = intent.getSerializableExtra("song") as? DataSongList
 
@@ -166,7 +207,12 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    // Xử lý nút thêm bài hát vào danh sách phát
+
+
+
+
+
+    // Hàm khởi tạo nút thêm bài hát vào danh sách phát
     private fun setupPlaylistButton() {
         val song = intent.getSerializableExtra("song") as? DataSongList
 
@@ -178,24 +224,85 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    // Cập nhật icon trái tim theo trạng thái yêu thích
+
+
+
+   //Hàm cập nhật biểu tượng yêu thích dựa trên trạng thái yêu thích
     private fun updateHeartIcon(isFav: Boolean) {
         val iconRes = if (isFav) R.drawable.heart_fill_svgrepo_com else R.drawable.icon_heart
         binding.toolbarInclude.btnHeart.setImageResource(iconRes)
     }
 
-    // Định dạng thời gian từ milliseconds thành mm:ss
+
+
+
+    // Hàm định dạng thơ gian của bài hát
     private fun formatTime(millis: Int): String {
         val minutes = (millis / 1000) / 60
         val seconds = (millis / 1000) % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-    // Giải phóng tài nguyên khi Activity bị huỷ
+
+
+
+
+
+
+
+    // Hàm nhảy qua bài hát kế tiếp
+    private fun playNextSong() {
+        val nextIndex = if (viewModel.getCurrentSongIndex() == viewModel.getSongsList().size - 1) {
+            0
+        } else {
+            viewModel.getCurrentSongIndex() + 1
+        }
+        val nextSong = viewModel.getSongsList()[nextIndex]
+        playSong(nextSong)
+        viewModel.setCurrentSongIndex(nextIndex)
+    }
+
+
+    // Hàm nhảy qua bài hát trước đó
+    private fun playPreviousSong() {
+        val prevIndex = if (viewModel.getCurrentSongIndex() == 0) {
+            viewModel.getSongsList().size - 1
+        } else {
+            viewModel.getCurrentSongIndex() - 1
+        }
+
+        val previousSong = viewModel.getSongsList()[prevIndex]
+        playSong(previousSong)
+        viewModel.setCurrentSongIndex(prevIndex)
+    }
+
+
+    // Hàm chơi nhạc sau khi nhảy bài hát
+    private fun playSong(song: DataSongList) {
+        viewModel.releaseMediaPlayer()
+        binding.songName.text = song.songName
+        Glide.with(this).load(song.image).into(binding.imgSong)
+        rotateAnimator.pause()
+        // Cập nhật trạng thái yêu thích
+        song.id?.let { id ->
+            favViewModel.isSongFavourite(id) { isFav ->
+                updateHeartIcon(isFav)
+                binding.toolbarInclude.btnHeart.setOnClickListener {
+                    favViewModel.toggleFavourite(id)
+                    updateHeartIcon(!isFav)
+                }
+            }
+        }
+        viewModel.prepareMediaPlayer(song.audio)
+        viewModel.play()
+    }
+
+
+
+
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.releaseMediaPlayer()
-        visualizer?.release()
-        visualizer = null
     }
 }

@@ -15,8 +15,6 @@
         android:id="@+id/toolbar_include"
         layout="@layout/custom_toolbar2"/>
 
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,6 +74,7 @@
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:layout_width="wrap_content"
+                    android:id="@+id/btnPreSong"
                     app:icon="@drawable/icon_pre_song"
                     app:iconSize="40dp"
                     android:layout_height="wrap_content"/>
@@ -85,11 +84,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="25dp"
-                    app:icon="@drawable/icon_pause"
+                    app:icon="@drawable/icon_play"
                     app:iconSize="50dp"
                     app:shapeAppearanceOverlay="@style/curved" />
 
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/btnNextSong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/icon_next_song"

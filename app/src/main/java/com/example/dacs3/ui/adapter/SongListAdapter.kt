@@ -20,7 +20,6 @@ class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapt
         fun onAddPlaylist(song: DataSongList)
     }
 
-    // Lấy tối đa 10 bài hát từ danh sách
     override fun getItemCount(): Int = if (list.size > 10) 10 else list.size
 
     fun setOnItemClickListenner(clickListenner: onItemClickListenner) {
@@ -46,7 +45,7 @@ class SongListAdapter(private val list: List<DataSongList>) : RecyclerView.Adapt
             .placeholder(R.drawable.placeholder)
             .error(R.drawable.error)
             .into(holder.imgSong)
-        holder.txtSongName.text = song.song_name
+        holder.txtSongName.text = song.songName
 
         // Xử lý khi click vào từng item
         holder.itemView.setOnClickListener {
