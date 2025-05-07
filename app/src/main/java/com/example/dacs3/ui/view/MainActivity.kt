@@ -133,15 +133,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSearch() {
-        searchAdapter = SearchAdapter { song ->
+        searchAdapter = SearchAdapter { song, songList ->
             val intent = Intent(this, PlayerActivity::class.java).apply {
+                // Thông tin bài hát hiện tại
                 putExtra("image", song.image)
                 putExtra("song_id", song.id)
                 putExtra("audio", song.audio)
                 putExtra("song_name", song.songName)
                 putExtra("song", song)
-                putExtra("song_list", ArrayList(songs))
-
+                putExtra("song_list", ArrayList(songList))
+                putExtra("source", "song_list")
             }
             startActivity(intent)
             exitSearchMode()
@@ -176,6 +177,7 @@ class MainActivity : AppCompatActivity() {
                         putExtra("song_name", songs[position].songName)
                         putExtra("song", songs[position])
                         putExtra("song_list", ArrayList(songs))
+                        putExtra("source", "song_list")
                     }
                     startActivity(intent)
                 }

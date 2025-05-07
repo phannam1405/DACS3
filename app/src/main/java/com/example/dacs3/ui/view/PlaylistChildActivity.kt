@@ -89,13 +89,28 @@ class PlaylistChildActivity : AppCompatActivity() {
         })
     }
 
+
+
     private fun openPlayer(song: DataSongList) {
+        // Lấy toàn bộ danh sách bài hát hiện có trong playlist
+        val playlistSongs = ArrayList<DataSongList>().apply {
+            for (i in 0 until adapterPlaylistChild.count) {
+                adapterPlaylistChild.getItem(i)?.let { add(it) }
+            }
+        }
+
+        // Tìm vị trí bài hát hiện tại
+        val currentPosition = playlistSongs.indexOfFirst { it.id == song.id }
+
         val intent = Intent(this, PlayerActivity::class.java).apply {
             putExtra("image", song.image)
             putExtra("song_id", song.id)
             putExtra("audio", song.audio)
             putExtra("song_name", song.songName)
+            putExtra("song", song)
             putExtra("playlist_id", playlistId)
+            putExtra("song_list", playlistSongs)
+            putExtra("current_position", currentPosition)
             putExtra("source", "playlist")
         }
         startActivity(intent)

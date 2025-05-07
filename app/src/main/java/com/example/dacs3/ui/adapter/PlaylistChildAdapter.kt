@@ -69,6 +69,14 @@ class PlaylistChildAdapter(
         return rowView
     }
 
+    fun getAllSongs(): List<DataSongList> {
+        val songs = mutableListOf<DataSongList>()
+        for (i in 0 until count) {
+            getItem(i)?.let { songs.add(it) }
+        }
+        return songs
+    }
+
     fun updateData(newList: List<DataSongList>) {
         list = newList
         Log.d("PlaylistChildAdapter", "List data updated, size: ${list.size}")

@@ -34,9 +34,6 @@ class PlayerActivity : AppCompatActivity() {
     // Animation xoay ảnh đĩa
     private lateinit var rotateAnimator: ObjectAnimator
 
-    private var currentSongIndex = 0
-    private lateinit var songsList: List<DataSongList>
-
     // Hàm khởi tạo Activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,19 +58,33 @@ class PlayerActivity : AppCompatActivity() {
         // Khởi tạo nút thêm bài hát vào danh sách phát
         setupPlaylistButton()
 
-        val songList = intent.getSerializableExtra("song_list") as? ArrayList<DataSongList>
+        val songsList = intent.getSerializableExtra("song_list") as? ArrayList<DataSongList>
         val currentSong = intent.getSerializableExtra("song") as? DataSongList
 
 
-        if (songList != null && currentSong != null) {
-            songsList = songList
-            currentSongIndex = songsList.indexOfFirst { it.id == currentSong.id }
+        if (songsList != null && currentSong != null) {
+            // Lưu danh sách vào ViewModel
             viewModel.setSongsList(songsList)
-            viewModel.setCurrentSongIndex(currentSongIndex)
+
+            // Tìm vị trí bài hát hiện tại trong danh sách
+            val currentIndex = songsList.indexOfFirst { it.id == currentSong.id }
+            viewModel.setCurrentSongIndex(currentIndex)
+
+            // Phát bài hát
+            playSong(currentSong)
+        }
+
+
+        if (songsList != null) {
+            viewModel.setSongsList(songsList)
+            // Tìm vị trí bài hát hiện tại trong playlist
+            val currentSong = intent.getSerializableExtra("song") as? DataSongList
+            val currentIndex = songsList.indexOfFirst { it.id == currentSong?.id }
+            if (currentIndex != -1) {
+                viewModel.setCurrentSongIndex(currentIndex)
+            }
         }
     }
-
-
 
 
 
@@ -244,35 +255,41 @@ class PlayerActivity : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
     // Hàm nhảy qua bài hát kế tiếp
     private fun playNextSong() {
-        val nextIndex = if (viewModel.getCurrentSongIndex() == viewModel.getSongsList().size - 1) {
-            0
-        } else {
-            viewModel.getCurrentSongIndex() + 1
+        val songs = viewModel.getSongsList()
+        if (songs.isEmpty()) return
+
+        val nextIndex = when {
+            // Nếu đang phát từ playlist và là bài cuối -> dừng
+            viewModel.getSource() == "playlist" && viewModel.getCurrentSongIndex() == songs.size - 1 -> {
+                Toast.makeText(this, "Đã hết playlist", Toast.LENGTH_SHORT).show()
+                return
+            }
+            // Các trường hợp khác (từ song_list/search) -> chuyển vòng
+            else -> (viewModel.getCurrentSongIndex() + 1) % songs.size
         }
-        val nextSong = viewModel.getSongsList()[nextIndex]
-        playSong(nextSong)
+
+        playSong(songs[nextIndex])
         viewModel.setCurrentSongIndex(nextIndex)
     }
 
-
     // Hàm nhảy qua bài hát trước đó
     private fun playPreviousSong() {
-        val prevIndex = if (viewModel.getCurrentSongIndex() == 0) {
-            viewModel.getSongsList().size - 1
-        } else {
-            viewModel.getCurrentSongIndex() - 1
+        val songs = viewModel.getSongsList()
+        if (songs.isEmpty()) return
+
+        val prevIndex = when {
+            // Nếu đang phát từ playlist và là bài đầu -> dừng
+            viewModel.getSource() == "playlist" && viewModel.getCurrentSongIndex() == 0 -> {
+                Toast.makeText(this, "Đây là bài đầu tiên", Toast.LENGTH_SHORT).show()
+                return
+            }
+            // Các trường hợp khác -> chuyển vòng
+            else -> (viewModel.getCurrentSongIndex() - 1 + songs.size) % songs.size
         }
 
-        val previousSong = viewModel.getSongsList()[prevIndex]
-        playSong(previousSong)
+        playSong(songs[prevIndex])
         viewModel.setCurrentSongIndex(prevIndex)
     }
 

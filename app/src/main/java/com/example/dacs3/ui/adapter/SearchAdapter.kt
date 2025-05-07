@@ -7,7 +7,7 @@ import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.CustomSearchBinding
 
 class SearchAdapter(
-    private val onItemClick: (DataSongList) -> Unit
+    private val onItemClick: (DataSongList, List<DataSongList>) -> Unit
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     private var songs = emptyList<DataSongList>()
@@ -25,7 +25,7 @@ class SearchAdapter(
                     .load(song.image)
                     .into(imgMusic)
 
-                root.setOnClickListener { onItemClick(song) }
+                root.setOnClickListener { onItemClick(song, songs)  }
             }
         }
     }

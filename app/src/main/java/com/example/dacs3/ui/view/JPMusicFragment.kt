@@ -44,6 +44,7 @@ class JPMusicFragment : Fragment(R.layout.fragment_j_p_music) {
                         putExtra("audio", song.audio)
                         putExtra("song_name", song.songName)
                         putExtra("song", song)
+                        putExtra("song_list", ArrayList(songList))
                     }
                     startActivity(intent)
                 }

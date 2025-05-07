@@ -37,6 +37,7 @@ class VNMusicFragment : Fragment(R.layout.fragment_v_n_music) {
                         putExtra("audio", song.audio)
                         putExtra("song_name", song.songName)
                         putExtra("song", song)
+                        putExtra("song_list", ArrayList(songList))
 
                     }
                     startActivity(intent)

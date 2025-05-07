@@ -43,6 +43,7 @@ class KRFragment : Fragment(R.layout.fragment_k_r) {
                         putExtra("audio", song.audio)
                         putExtra("song_name", song.songName)
                         putExtra("song", song)
+                        putExtra("song_list", ArrayList(songList))
                     }
                     startActivity(intent)
                 }
