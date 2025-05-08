@@ -85,10 +85,6 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
                 val newId = "playlist${maxIndex + 1}"
                 val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-                val playlist = DataPlaylistDad(
-                    owner = userId,
-                    title = tieuDe
-                )
 
                 // Ghi playlist và khởi tạo songs là rỗng
                 val playlistMap = mapOf(
@@ -145,8 +141,4 @@ class PlayListDadViewModel(application: Application) : AndroidViewModel(applicat
                 Log.e("Firebase", "Lỗi khi cập nhật tên playlist: ${it.message}")
             }
     }
-
-
-
-
 }

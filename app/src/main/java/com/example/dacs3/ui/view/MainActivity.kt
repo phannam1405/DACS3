@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.SearchView
 import android.widget.TextView
@@ -24,20 +23,14 @@ import com.example.dacs3.ui.adapter.ViewPageMusicAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
 import com.google.android.material.carousel.CarouselLayoutManager
-import com.google.android.material.carousel.CarouselSnapHelper
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
-
-    // Biến toàn cục
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var viewModelChild: PlaylistChildViewModel
     private lateinit var searchAdapter: SearchAdapter
     private var isSearchMode = false
-    private var songs: List<DataSongList> = emptyList()
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +38,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        // Khởi tạo ViewModel
+        // Khởi tạo ViewModel cho MainActivity
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        // Khởi tạo ViewModel cho Fragment
         viewModelChild = ViewModelProvider(this).get(PlaylistChildViewModel::class.java)
-
-
-        // Khởi tạo layout bài hát
-        setupSongList()
 
         // Khởi tạo carousel banner
         setupImageCarousel()
@@ -69,9 +60,15 @@ class MainActivity : AppCompatActivity() {
         setupMusicTabGenre()
 
         // Quan sát dữ liệu
-        observeData()
+        setUpSongList()
     }
 
+
+
+
+
+
+    // Setup TabLayout
     private fun setupMusicTabGenre() {
         val adapter = ViewPageMusicAdapter(supportFragmentManager, lifecycle)
         binding.viewPagerGenres.adapter = adapter
@@ -84,17 +81,19 @@ class MainActivity : AppCompatActivity() {
                 4 -> tab.text = "Hàn Quốc"
             }
         }.attach()
+
+        // Vô hiệu hóa tương tác vuốt ngang trong Tablayout
         binding.viewPagerGenres.isUserInputEnabled = false
     }
 
-    private fun setupSongList() {
-        binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSongList.setHasFixedSize(true)
-        CarouselSnapHelper().attachToRecyclerView(binding.rvSongList)
-    }
 
+
+
+
+
+
+    // Khởi tạo carousel
     private fun setupImageCarousel() {
-        binding.carousel.setHasFixedSize(true)
         binding.carousel.layoutManager = CarouselLayoutManager()
 
         val imageList = mutableListOf(
@@ -108,12 +107,23 @@ class MainActivity : AppCompatActivity() {
         binding.carousel.adapter = carouselAdapter
     }
 
+
+
+
+
+
+
+
+
+
+
+    // Hàm khởi tạo và xử lí với bottom menu
     private fun setupBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.itemFav -> {
                     startActivity(Intent(this, FavouriteActivity::class.java))
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)    //Hàm chuyên cảnh hiệu ứng fade
                     true
                 }
                 R.id.itemHome -> true
@@ -132,6 +142,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Hàm xử lí với Navigation Drawer
+    private fun setupNavigationView() {
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_feedback -> {
+                    Toast.makeText(this, "Clicked Feedback", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_settings -> {
+                    Toast.makeText(this, "Clicked setting", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_info -> {
+                    Toast.makeText(this, "Clicked Info", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                    true
+                }
+                R.id.nav_logout -> {
+                    showLogoutDialog()
+                    true
+                }
+                else -> false
+            }.also {
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Hàm khởi tạo và xử lí khi người dùng nhấn vào Item của Search
     private fun setupSearch() {
         searchAdapter = SearchAdapter { song, songList ->
             val intent = Intent(this, PlayerActivity::class.java).apply {
@@ -154,8 +213,9 @@ class MainActivity : AppCompatActivity() {
         setupSearchView()
     }
 
-    private fun observeData() {
-        // Quan sát kết quả tìm kiếm
+
+    // Khởi tạo và xử lí danh sách bài hát
+    private fun setUpSongList() {
         viewModel.searchResults.observe(this) { results ->
             Log.d("MainActivity", "Search results received: ${results.size}")
             if (isSearchMode) {
@@ -190,42 +250,24 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+
+        binding.rvSongList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvSongList.setHasFixedSize(true)
     }
 
-    private fun setupNavigationView() {
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_feedback -> {
-                    Toast.makeText(this, "Clicked Feedback", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_settings -> {
-                    Toast.makeText(this, "Clicked setting", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_info -> {
-                    Toast.makeText(this, "Clicked Info", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                    true
-                }
-                R.id.nav_logout -> {
-                    showLogoutDialog()
-                    true
-                }
-                else -> false
-            }.also {
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
-            }
-        }
-    }
+
+
+
+
+
+
+
+
 
     private fun setupSearchView() {
-        val searchView = binding.customToolbar.searchView
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.customToolbar.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            // khi người dùng submit
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.takeIf { it.isNotEmpty() }?.let {
                     enterSearchMode()
@@ -234,6 +276,7 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
 
+            // Khi người dùng thay đổi văn bản tìm kiếm
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let {
                     if (it.isNotEmpty()) {
@@ -245,35 +288,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 return false
             }
+
         })
     }
 
-    private fun showLogoutDialog() {
-        val builder = AlertDialog.Builder(this)
-        val inflater = layoutInflater
-        val dialogView = inflater.inflate(R.layout.custom_dialog_logout, null)
-        builder.setView(dialogView)
 
-        val dialog = builder.create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        val btnYes = dialogView.findViewById<Button>(R.id.btnYes)
-        val btnNo = dialogView.findViewById<Button>(R.id.btnNo)
-
-        btnYes.setOnClickListener {
-            val intent = Intent(this, WelcomeActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        }
-
-        btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
+    // Hàm xử lí khi người dùng nhấn vào nút tìm kiếm
     private fun enterSearchMode() {
         isSearchMode = true
         binding.rVSearch.visibility = View.VISIBLE
@@ -281,6 +301,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    // Hàm xử lí khi người dùng nhấn vào nút thoát khỏi chế độ tìm kiếm
     private fun exitSearchMode() {
         isSearchMode = false
         binding.rVSearch.visibility = View.GONE
@@ -290,8 +312,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    @Deprecated("Deprecated, but still used for back compatibility")
-    @Suppress("DEPRECATION")
+
+
+
+
+    // Hàm khi bạn nhấn nút Back khi đang ở Activity này
+    @Deprecated("Deprecated, but still used for back compatibility")  // Thông báo hàm cũ
+    @Suppress("DEPRECATION")   // Bỏ qua cảnh báo
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
@@ -318,6 +345,34 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
+    // Khởi tạo Dialog hỏi bạn muôn đăng xuất
+    private fun showLogoutDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_dialog_logout, null)
+        builder.setView(dialogView)
+
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val btnYes = dialogView.findViewById<Button>(R.id.btnYes)
+        val btnNo = dialogView.findViewById<Button>(R.id.btnNo)
+
+        btnYes.setOnClickListener {
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
+
+        btnNo.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
 
     override fun onResume() {
         super.onResume()

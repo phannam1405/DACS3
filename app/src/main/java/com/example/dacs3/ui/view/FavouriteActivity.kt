@@ -33,10 +33,7 @@ class FavouriteActivity : AppCompatActivity() {
         viewModel.loadFavourites()
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadFavourites()
-    }
+
 
     private fun setupToolbar() {
         supportActionBar?.hide()
@@ -52,7 +49,6 @@ class FavouriteActivity : AppCompatActivity() {
             if (list.isNotEmpty()) {
                 adapter = FavouriteAdapter(this, list)
                 binding.lvMusicFav.adapter = adapter
-
                 setupItemClickListener()
                 setupDeleteClickListener()
             } else {
@@ -61,6 +57,9 @@ class FavouriteActivity : AppCompatActivity() {
             }
         })
     }
+
+
+
 
 
     // Hàm xử lý khi click vào item trong ListView
@@ -84,6 +83,10 @@ class FavouriteActivity : AppCompatActivity() {
         })
     }
 
+
+
+
+
     // Hàm xóa nhạc khỏi danh sách yêu thích
     private fun setupDeleteClickListener() {
         adapter.setOnDeleteClickListener(object : FavouriteAdapter.OnDeleteClickListener {
@@ -99,5 +102,13 @@ class FavouriteActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+
+
+    // Hàm cập nhật danh sách yêu thích
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadFavourites()
     }
 }

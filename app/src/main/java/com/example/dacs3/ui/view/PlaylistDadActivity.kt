@@ -29,6 +29,9 @@ class PlaylistDadActivity : AppCompatActivity() {
         setupAddPlaylistButton()
     }
 
+
+
+    // Khởi tạo và thiết lập Toolbar
     private fun setupToolbar() {
         binding.toolbarInclude.txtTitle.text = "DANH SÁCH PHÁT"
         binding.toolbarInclude.imgBack.setOnClickListener {
@@ -37,15 +40,20 @@ class PlaylistDadActivity : AppCompatActivity() {
         }
     }
 
+
+
+    // Khởi tạo và thiết lập ViewModel
     private fun setupViewModel() {
         viewModel = ViewModelProvider(this).get(PlayListDadViewModel::class.java)
-
         // Quan sát LiveData từ ViewModel để cập nhật giao diện khi có thay đổi
         viewModel.playlist.observe(this) { playlist ->
             setupPlaylistAdapter(playlist)
         }
     }
 
+
+
+    // Thiết lập Adapter cho GridView
     private fun setupPlaylistAdapter(playlist: List<DataPlaylistDad>) {
         val adapter = PlaylistDadAdapter(this, playlist)
         binding.gvPlaylist.adapter = adapter
@@ -65,6 +73,9 @@ class PlaylistDadActivity : AppCompatActivity() {
         })
     }
 
+
+
+    // Chuyển hướng đến Activity con
     private fun navigateToOpenlistChild(position: Int) {
         val playlistId = viewModel.playlist.value?.get(position)?.id
         val playlistName = viewModel.playlist.value?.get(position)?.title
@@ -74,6 +85,9 @@ class PlaylistDadActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+
+
+    // Xóa Playlist
     private fun deletePlaylist(position: Int) {
         val playlistId = viewModel.playlist.value?.get(position)?.id
         playlistId?.let {
@@ -82,17 +96,24 @@ class PlaylistDadActivity : AppCompatActivity() {
         }
     }
 
+
+
+    // Sửa tên Playlist
     private fun editPlaylistName(position: Int) {
         val currentItem = viewModel.playlist.value?.get(position)
         currentItem?.title?.let { showEditDialog(position, it) }
     }
 
+
+    // Thêm Playlist mới
     private fun setupAddPlaylistButton() {
         binding.btnAddPlaylist.setOnClickListener {
             addNewPlaylist()
         }
     }
 
+
+    // Thêm Playlist mới
     private fun addNewPlaylist() {
         val dialogBinding = LayoutInflater.from(this).inflate(R.layout.custom_dialog_addpl, null)
         val editTextPlaylistName = dialogBinding.findViewById<EditText>(R.id.editTextPlaylistName)
@@ -121,6 +142,9 @@ class PlaylistDadActivity : AppCompatActivity() {
         dialog.show()
     }
 
+
+
+    // Hiển thị Dialog để sửa tên Playlist
     private fun showEditDialog(position: Int, currentTitle: String) {
         val editText = EditText(this)
         editText.setText(currentTitle)

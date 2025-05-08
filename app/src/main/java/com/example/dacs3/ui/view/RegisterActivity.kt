@@ -24,28 +24,34 @@ class RegisterActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
+
+        // Khởi tạo Firebase Authentication instance
+        mAuth = FirebaseAuth.getInstance()
+
+        // Sự kiến khi nhấn đã có tài khoản
         binding.txtRe.setOnClickListener {
             val i1 = Intent(this, LoginActivity::class.java)
             startActivity(i1)
         }
 
-        // Khởi tạo Firebase Authentication instance
-        mAuth = FirebaseAuth.getInstance()
-
         // Sự kiện khi nhấn vào nút đăng ký
         binding.btnRegister.setOnClickListener {
             register()
         }
+
     }
 
 
+
+    // Hàm kiểm tra xem có kết nối mạng hay không
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
-                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     }
+
+
 
     // Hàm xử lý đăng ký người dùng
     private fun register() {
@@ -95,18 +101,14 @@ class RegisterActivity : AppCompatActivity() {
 
                     // Kiểm tra nếu lấy được UID và lưu thông tin người dùng vào Firebase Realtime Database
                     if (uid != null) {
-                        val databaseRef = FirebaseDatabase
-                            .getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
-                            .getReference("User")
+                        val databaseRef = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app").getReference("User")
                         databaseRef.child(uid).setValue(user)  // Lưu thông tin người dùng
                             .addOnCompleteListener { saveTask ->
                                 if (saveTask.isSuccessful) {
-                                    Log.d("FirebaseDB", "Dữ liệu lưu thành công cho UID: $uid")
                                     Toast.makeText(this, "Đăng ký và lưu thông tin thành công!", Toast.LENGTH_SHORT).show()
                                     startActivity(Intent(this, MainActivity::class.java))
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                                 } else {
-                                    Log.e("FirebaseDB", "Lỗi lưu DB: ${saveTask.exception?.message}")
                                     Toast.makeText(this, "Lưu thông tin người dùng thất bại!", Toast.LENGTH_SHORT).show()
                                 }
                             }
@@ -115,7 +117,6 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 } else {
                     Toast.makeText(this, "Đăng ký thất bại: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("FirebaseAuth", "Lỗi đăng ký: ${task.exception?.message}")
                 }
             }
     }

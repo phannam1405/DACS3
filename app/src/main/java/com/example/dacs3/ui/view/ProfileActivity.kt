@@ -24,21 +24,44 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initUI()
+        setupListeners()
+    }
+
+
+
+
+
+
+    // Khởi tạo giao diện và tải dữ liệu
+    private fun initUI() {
         setupEditableFields(intent.getBooleanExtra("is_editable", true))
         loadUserProfile()
         setupImagePicker()
+    }
 
+
+
+
+    // Thiết lập các sự kiện click
+    private fun setupListeners() {
         binding.btnUpdate.setOnClickListener { updateUserProfile() }
         binding.btnReturn.setOnClickListener { finish() }
         binding.btnPicture.setOnClickListener { imagePickerLauncher.launch("image/*") }
     }
 
+    // Khóa các trường nếu không cho phép chỉnh sửa
     private fun setupEditableFields(isEditable: Boolean) {
-        if (!isEditable) {
-            lockAllEditTexts()
-        }
+        if (!isEditable) lockAllEditTexts()
     }
 
+
+
+
+
+
+
+    // Tải thông tin người dùng từ Firebase
     private fun loadUserProfile() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val databaseRef = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
@@ -53,12 +76,7 @@ class ProfileActivity : AppCompatActivity() {
                 binding.edtMota.setText(it.child("des").value?.toString() ?: "")
 
                 it.child("avatarUrl").value?.toString()?.let { avatarUrl ->
-                    Glide.with(this)
-                        .load(avatarUrl)
-                        .placeholder(R.drawable.icon_avatar)
-                        .error(R.drawable.icon_avatar)
-                        .circleCrop()
-                        .into(binding.imgAvatar)
+                    loadAvatarImage(avatarUrl)
                 }
             }
         }.addOnFailureListener {
@@ -66,13 +84,19 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+
+
+
+
+
+    // Cập nhật thông tin người dùng lên Firebase
     private fun updateUserProfile() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val databaseRef = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
             .getReference("User")
             .child(uid)
 
-        val updatedData = mapOf<String, Any>(
+        val updatedData = mapOf(
             "userName" to binding.edtName.text.toString(),
             "phoneNumber" to binding.edtSDT.text.toString(),
             "des" to binding.edtMota.text.toString()
@@ -83,6 +107,12 @@ class ProfileActivity : AppCompatActivity() {
             .addOnFailureListener { showToast("Cập nhật thất bại") }
     }
 
+
+
+
+
+
+    // Thiết lập chọn ảnh
     private fun setupImagePicker() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -92,6 +122,25 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+
+
+
+
+
+    // Tải ảnh đại diện
+    private fun loadAvatarImage(avatarUrl: String) {
+        Glide.with(this)
+            .load(avatarUrl)
+            .placeholder(R.drawable.icon_avatar)
+            .error(R.drawable.icon_avatar)
+            .circleCrop()
+            .into(binding.imgAvatar)
+    }
+
+
+
+
+    // Upload ảnh lên Cloudinary
     private fun uploadAvatarToFirebase(uri: Uri) {
         val inputStream = contentResolver.openInputStream(uri)
         val cloudinary = CloudinaryHelper.getCloudinary()
@@ -103,7 +152,7 @@ class ProfileActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     saveAvatarUrlToFirebase(avatarUrl)
-                    Glide.with(this).load(avatarUrl).into(binding.imgAvatar)
+                    loadAvatarImage(avatarUrl)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -112,18 +161,25 @@ class ProfileActivity : AppCompatActivity() {
         }.start()
     }
 
+
+
+
+    // Lưu link ảnh đại diện vào Firebase
     private fun saveAvatarUrlToFirebase(avatarUrl: String) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
         val databaseRef = FirebaseDatabase.getInstance("https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app")
             .getReference("User")
             .child(uid)
 
-        val updates = mapOf<String, Any>("avatarUrl" to avatarUrl)
+        val updates = mapOf("avatarUrl" to avatarUrl)
         databaseRef.updateChildren(updates)
             .addOnSuccessListener { showToast("Ảnh đại diện đã cập nhật") }
             .addOnFailureListener { showToast("Lưu ảnh thất bại") }
     }
 
+
+
+    // Khóa các trường nhập liệu
     private fun lockAllEditTexts() {
         binding.edtName.isEnabled = false
         binding.edtSDT.isEnabled = false
@@ -132,6 +188,9 @@ class ProfileActivity : AppCompatActivity() {
         binding.btnPicture.visibility = View.INVISIBLE
     }
 
+
+
+    // Hiển thị Toast
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
