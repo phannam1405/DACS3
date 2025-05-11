@@ -39,7 +39,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private var currentSongIndex = 0
     private var songsList: List<DataSongList> = emptyList()
 
-    private var currentSource: String = "song_list"
 
     fun setSongsList(songs: List<DataSongList>) {
         songsList = songs
@@ -48,10 +47,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     fun setCurrentSongIndex(index: Int) {
         currentSongIndex = index
     }
-    fun setSource(source: String) {
-        currentSource = source
-    }
-
 
 
 
@@ -176,9 +171,4 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             musicRepository.insertMusic(music)
         }
     }
-
-
-
-    fun getSource() = currentSource
-
 }

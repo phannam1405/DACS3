@@ -77,7 +77,6 @@ class PlayerActivity : AppCompatActivity() {
 
         if (songsList != null) {
             viewModel.setSongsList(songsList)
-            // Tìm vị trí bài hát hiện tại trong playlist
             val currentSong = intent.getSerializableExtra("song") as? DataSongList
             val currentIndex = songsList.indexOfFirst { it.id == currentSong?.id }
             if (currentIndex != -1) {
@@ -154,10 +153,6 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.currentPosition.observe(this) { position ->
             binding.seekBar.progress = position
             binding.startTime.text = formatTime(position)
-        }
-
-        viewModel.isPlaying.observe(this) { isPlaying ->
-            binding.btnPlayPause.text = if (isPlaying) "Pause" else "Play"
         }
 
         binding.btnPlayPause.setOnClickListener {
@@ -260,15 +255,8 @@ class PlayerActivity : AppCompatActivity() {
         val songs = viewModel.getSongsList()
         if (songs.isEmpty()) return
 
-        val nextIndex = when {
-            // Nếu đang phát từ playlist và là bài cuối -> dừng
-            viewModel.getSource() == "playlist" && viewModel.getCurrentSongIndex() == songs.size - 1 -> {
-                Toast.makeText(this, "Đã hết playlist", Toast.LENGTH_SHORT).show()
-                return
-            }
-            // Các trường hợp khác (từ song_list/search) -> chuyển vòng
-            else -> (viewModel.getCurrentSongIndex() + 1) % songs.size
-        }
+        val nextIndex = (viewModel.getCurrentSongIndex() + 1) % songs.size
+
 
         playSong(songs[nextIndex])
         viewModel.setCurrentSongIndex(nextIndex)
@@ -279,15 +267,8 @@ class PlayerActivity : AppCompatActivity() {
         val songs = viewModel.getSongsList()
         if (songs.isEmpty()) return
 
-        val prevIndex = when {
-            // Nếu đang phát từ playlist và là bài đầu -> dừng
-            viewModel.getSource() == "playlist" && viewModel.getCurrentSongIndex() == 0 -> {
-                Toast.makeText(this, "Đây là bài đầu tiên", Toast.LENGTH_SHORT).show()
-                return
-            }
-            // Các trường hợp khác -> chuyển vòng
-            else -> (viewModel.getCurrentSongIndex() - 1 + songs.size) % songs.size
-        }
+        val prevIndex = (viewModel.getCurrentSongIndex() - 1 + songs.size) % songs.size
+
 
         playSong(songs[prevIndex])
         viewModel.setCurrentSongIndex(prevIndex)

@@ -21,6 +21,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _searchResults = MutableLiveData<List<DataSongList>>()
     val searchResults: LiveData<List<DataSongList>> get() = _searchResults
 
+    private val _categories = MutableLiveData<List<String>>()
+    val categories: LiveData<List<String>> get() = _categories
+
+
     private val dbref: DatabaseReference = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Song")

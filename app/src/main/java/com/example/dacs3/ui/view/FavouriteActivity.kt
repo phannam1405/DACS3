@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.ActivityFavouriteBinding
 import com.example.dacs3.ui.adapter.FavouriteAdapter
 import com.example.dacs3.ui.viewmodel.FavouriteViewModel
@@ -69,12 +70,19 @@ class FavouriteActivity : AppCompatActivity() {
                 if (adapter.count == 0) return
 
                 val selectedSong = adapter.getItem(position)
+                val favSonglist = ArrayList<DataSongList>().apply {
+                    for (i in 0 until adapter.count) {
+                        adapter.getItem(i)?.let { add(it) }
+                    }
+                }
                 if (selectedSong != null) {
                     val intent = Intent(this@FavouriteActivity, PlayerActivity::class.java)
                     intent.putExtra("image", selectedSong.image)
                     intent.putExtra("song_id", selectedSong.id)
                     intent.putExtra("audio", selectedSong.audio)
                     intent.putExtra("song_name", selectedSong.songName)
+                    intent.putExtra("song", selectedSong)
+                    intent.putExtra("song_list", favSonglist)
                     startActivity(intent)
                 } else {
                     Toast.makeText(this@FavouriteActivity, "oh no", Toast.LENGTH_SHORT).show()

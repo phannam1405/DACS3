@@ -57,10 +57,6 @@ class ProfileActivity : AppCompatActivity() {
 
 
 
-
-
-
-
     // Tải thông tin người dùng từ Firebase
     private fun loadUserProfile() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -117,7 +113,7 @@ class ProfileActivity : AppCompatActivity() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 binding.imgAvatar.setImageURI(it)
-                uploadAvatarToFirebase(it)
+                uploadAvatarToCloudinary(it)
             }
         }
     }
@@ -141,7 +137,7 @@ class ProfileActivity : AppCompatActivity() {
 
 
     // Upload ảnh lên Cloudinary
-    private fun uploadAvatarToFirebase(uri: Uri) {
+    private fun uploadAvatarToCloudinary(uri: Uri) {
         val inputStream = contentResolver.openInputStream(uri)
         val cloudinary = CloudinaryHelper.getCloudinary()
 

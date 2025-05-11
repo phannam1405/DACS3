@@ -31,10 +31,10 @@ class DownloadActivity : AppCompatActivity(), DownloadAdapter.OnItemClickListene
         setupToolbar()
         // Khởi tạo và thiết lập Database và Repository
         initializeDatabase()
+        // Khởi tạo và thiết lập ListView
+        setupListView()
         // Lấy dữ liệu và thiết lập Adapter cho ListView
         loadData()
-        // Thiết lập ListView
-        setupListView()
     }
 
 

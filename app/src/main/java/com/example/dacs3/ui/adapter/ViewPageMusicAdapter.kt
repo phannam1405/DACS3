@@ -15,7 +15,7 @@ class ViewPageMusicAdapter(fragManager: FragmentManager, lifecycle: Lifecycle):
 
 
     override fun getItemCount(): Int {
-        return 5
+        return 6
     }
 
     override fun createFragment(position: Int): Fragment {
