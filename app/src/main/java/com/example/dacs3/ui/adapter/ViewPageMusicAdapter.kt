@@ -4,27 +4,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.dacs3.ui.view.CNMusicFragment
-import com.example.dacs3.ui.view.JPMusicFragment
-import com.example.dacs3.ui.view.KRFragment
-import com.example.dacs3.ui.view.USUKMusicFragment
-import com.example.dacs3.ui.view.VNMusicFragment
 
-class ViewPageMusicAdapter(fragManager: FragmentManager, lifecycle: Lifecycle):
-    FragmentStateAdapter(fragManager, lifecycle ) {
+class ViewPageMusicAdapter(
+    fragManager: FragmentManager,
+    lifecycle: Lifecycle,
+    private val categories: List<String> // Nhận categories từ bên ngoài
+) : FragmentStateAdapter(fragManager, lifecycle) {
 
-
-    override fun getItemCount(): Int {
-        return 6
-    }
+    override fun getItemCount(): Int = categories.size
 
     override fun createFragment(position: Int): Fragment {
-        return when(position){
-            0 -> VNMusicFragment()
-            1 -> CNMusicFragment()
-            2 -> JPMusicFragment()
-            3 -> USUKMusicFragment()
-            else -> KRFragment()
-        }
+        return MusicGenreFragment.newInstance(categories[position])
     }
 }

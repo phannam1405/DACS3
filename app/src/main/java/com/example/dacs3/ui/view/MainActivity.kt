@@ -70,22 +70,19 @@ class MainActivity : AppCompatActivity() {
 
     // Setup TabLayout
     private fun setupMusicTabGenre() {
-        val adapter = ViewPageMusicAdapter(supportFragmentManager, lifecycle)
-        binding.viewPagerGenres.adapter = adapter
-        TabLayoutMediator(binding.tabMusicGenres, binding.viewPagerGenres) { tab, position ->
-            when (position) {
-                0 -> tab.text = "Việt Nam"
-                1 -> tab.text = "Trung Quốc"
-                2 -> tab.text = "Nhật Bản"
-                3 -> tab.text = "US-UK"
-                4 -> tab.text = "Hàn Quốc"
+        viewModel.categories.observe(this) { categories ->
+            if (categories.isNotEmpty()) {
+                val adapter = ViewPageMusicAdapter(supportFragmentManager, lifecycle, categories)
+                binding.viewPagerGenres.adapter = adapter
+
+                TabLayoutMediator(binding.tabMusicGenres, binding.viewPagerGenres) { tab, position ->
+                    tab.text = categories[position]
+                }.attach()
+
+                binding.viewPagerGenres.isUserInputEnabled = false
             }
-        }.attach()
-
-        // Vô hiệu hóa tương tác vuốt ngang trong Tablayout
-        binding.viewPagerGenres.isUserInputEnabled = false
+        }
     }
-
 
 
 

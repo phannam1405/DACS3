@@ -24,13 +24,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> get() = _categories
 
-
     private val dbref: DatabaseReference = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Song")
 
+    private val categoryRef: DatabaseReference = FirebaseDatabase.getInstance(
+        "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
+    ).getReference("Category")
+
+
     init {
         layThongTinKhoNhac()
+        fetchAllCategories()
+    }
+
+    private fun fetchAllCategories() {
+        categoryRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val categoryList = mutableListOf<String>()
+                if (snapshot.exists()) {
+                    for (categorySnapshot in snapshot.children) {
+                        val categoryName = categorySnapshot.child("category_name")
+                            .getValue(String::class.java)
+                        categoryName?.let { categoryList.add(it) }
+                    }
+                }
+                _categories.postValue(categoryList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Error fetching categories: ${error.message}")
+            }
+        })
     }
 
     fun getSongsByCategory(category: String): LiveData<List<DataSongList>> {
@@ -58,6 +83,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         return filteredSongs
     }
+
+
 
 
 

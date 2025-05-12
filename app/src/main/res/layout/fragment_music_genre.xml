@@ -3,10 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.CNMusicFragment">
+    tools:context=".ui.adapter.MusicGenreFragment">
+
     <ListView
         android:layout_margin="5dp"
-        android:id="@+id/lv_cn_music"
+        android:id="@+id/lv_music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 </FrameLayout>
