@@ -96,13 +96,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     for (musicSnapshot in snapshot.children) {
                         val song = musicSnapshot.getValue(DataSongList::class.java)
                         song?.let {
-                            it.id = musicSnapshot.key
-                            songList.add(it)
+                            // Kiểm tra nếu headline = true thì mới thêm vào danh sách
+                            if (it.headline == true) {
+                                it.id = musicSnapshot.key
+                                songList.add(it)
+                            }
                         }
                     }
                 }
                 _songs.postValue(songList)
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.e("Firebase", "Lỗi lấy dữ liệu: ${error.message}")
             }

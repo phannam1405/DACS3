@@ -10,5 +10,5 @@ data class DataSongList(
     val singerImage: String? = null,
     val audio: String? = null,
     val category: String? = null,
-    val view: Long =0
+    val headline:Boolean? = null,
 ) : Serializable
