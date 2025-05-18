@@ -47,7 +47,7 @@ class SongGerneAdapter(
 
         txtTitle?.text = song.songName
         txtSinger?.text = song.singerName
-        txtTime?.text = "4:30"
+        txtTime?.text = song.category
 
         Glide.with(context)
             .load(song.image)

@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.media3:media3-session:1.1.1")
     implementation("androidx.room:room-ktx:2.5.0")
     kapt("androidx.room:room-compiler:2.5.0")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
@@ -53,6 +54,8 @@ dependencies {
     implementation ("com.cloudinary:cloudinary-android:2.3.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation ("androidx.media:media:1.6.0")
+    implementation ("androidx.core:core-ktx:1.9.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

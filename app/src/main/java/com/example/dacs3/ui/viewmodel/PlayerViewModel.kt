@@ -1,7 +1,12 @@
 package com.example.dacs3.ui.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.session.MediaSession
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -21,7 +26,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class PlayerViewModel(application: Application) : AndroidViewModel(application) {
+
     private var mediaPlayer: MediaPlayer? = null
+    private var mediaSession: MediaSession? = null
 
     private val _isPlaying = MutableLiveData<Boolean>()
     val isPlaying: LiveData<Boolean> = _isPlaying
@@ -39,17 +46,20 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private var currentSongIndex = 0
     private var songsList: List<DataSongList> = emptyList()
 
+    var wasPlayingBeforeCall = false
 
     fun setSongsList(songs: List<DataSongList>) {
         songsList = songs
     }
+
+    fun getSongsList(): List<DataSongList> = songsList
+
     fun getCurrentSongIndex(): Int = currentSongIndex
     fun setCurrentSongIndex(index: Int) {
         currentSongIndex = index
     }
 
-
-
+    // --- MediaPlayer chính ---
     fun prepareMediaPlayer(audio: String?) {
         releaseMediaPlayer()
         mediaPlayer = MediaPlayer()
@@ -63,18 +73,31 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
                     mediaPlayer?.setDataSource(context, Uri.parse(audio)) // Phát offline
                 }
 
+                mediaSession = MediaSession(getApplication(), "MusicPlayer").apply {
+                    setCallback(object : MediaSession.Callback() {
+                        override fun onPlay() {
+                            play()
+                        }
+                        override fun onPause() {
+                            pause()
+                        }
+                        override fun onSkipToNext() {}
+                        override fun onSkipToPrevious() {}
+                    })
+                    isActive = true
+                }
+
                 mediaPlayer?.prepareAsync()
                 mediaPlayer?.setOnPreparedListener {
                     _duration.postValue(it.duration)
                     _isPlaying.postValue(false)
-                    _mediaPlayerPrepared.postValue(it.audioSessionId)  // Gửi audioSessionId
+                    _mediaPlayerPrepared.postValue(it.audioSessionId)
                 }
             }
         } catch (e: IOException) {
             Log.e("PlayerViewModel", "Lỗi khi chuẩn bị MediaPlayer", e)
         }
     }
-
 
     fun play() {
         mediaPlayer?.let {
@@ -86,7 +109,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-
     fun pause() {
         mediaPlayer?.let {
             if (it.isPlaying) {
@@ -95,7 +117,6 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             }
         }
     }
-
 
     fun seekTo(position: Int) {
         mediaPlayer?.seekTo(position)
@@ -113,13 +134,15 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     fun releaseMediaPlayer() {
         mediaPlayer?.release()
         mediaPlayer = null
+        mediaSession?.release()
+        mediaSession = null
     }
 
-
+    // --- Tải bài hát về máy ---
     fun downloadSong(song: DataSongList, onComplete: (Boolean) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val client = OkHttpClient()
-            val downloadedPaths = mutableMapOf<String, String>()
+            val downloadedPaths = mutableMapOf<String, String>() // <url, đường dẫn file trên máy>
             var hasFailed = false
 
             val downloadTasks = listOfNotNull(
@@ -139,6 +162,7 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
                             FileOutputStream(file).use { output -> input.copyTo(output) }
                         }
                         downloadedPaths[url] = file.absolutePath
+                        Log.d("Download", file.absolutePath)
                     } else {
                         hasFailed = true
                     }
@@ -148,14 +172,15 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             withContext(Dispatchers.Main) {
-                saveToDatabase(song, downloadedPaths[song.audio] ?: "", downloadedPaths[song.image] ?: "", downloadedPaths[song.singerImage] ?: "")
+                saveToDatabase(
+                    song,
+                    downloadedPaths[song.audio] ?: "",
+                    downloadedPaths[song.image] ?: "",
+                    downloadedPaths[song.singerImage] ?: ""
+                )
                 onComplete(!hasFailed)
             }
         }
-    }
-
-    fun getSongsList(): List<DataSongList> {
-        return songsList
     }
 
     private fun saveToDatabase(song: DataSongList, filePath: String, coverPath: String, singerPath: String) {
@@ -169,6 +194,47 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         )
         CoroutineScope(Dispatchers.IO).launch {
             musicRepository.insertMusic(music)
+        }
+    }
+
+    public fun setupAudioFocus() {
+        val audioManager = getApplication<Application>().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        val audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).run {
+            setAudioAttributes(AudioAttributes.Builder().run {
+                setUsage(AudioAttributes.USAGE_MEDIA)
+                setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                build()
+            })
+            setAcceptsDelayedFocusGain(true)
+            setOnAudioFocusChangeListener { focusChange ->
+                when (focusChange) {
+                    AudioManager.AUDIOFOCUS_LOSS -> {
+                        wasPlayingBeforeCall = isPlaying.value == true
+                        pause()
+                    }
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                        wasPlayingBeforeCall = isPlaying.value == true
+                        pause()
+                    }
+                    AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                        // Giảm volume khi cần
+                        mediaPlayer?.setVolume(0.2f, 0.2f)
+                    }
+                    AudioManager.AUDIOFOCUS_GAIN -> {
+                        mediaPlayer?.setVolume(1.0f, 1.0f)
+                        if (wasPlayingBeforeCall) {
+                            play()
+                        }
+                    }
+                }
+            }
+            build()
+        }
+
+        val result = audioManager.requestAudioFocus(audioFocusRequest)
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            // Có thể phát nhạc
         }
     }
 }

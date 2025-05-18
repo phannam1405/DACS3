@@ -18,6 +18,7 @@ import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.ActivityMainBinding
 import com.example.dacs3.ui.adapter.CarouselAdapter
 import com.example.dacs3.ui.adapter.SearchAdapter
+import com.example.dacs3.ui.adapter.SingerListAdapter
 import com.example.dacs3.ui.adapter.SongListAdapter
 import com.example.dacs3.ui.adapter.ViewPageMusicAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
@@ -61,13 +62,24 @@ class MainActivity : AppCompatActivity() {
 
         // Quan sát dữ liệu
         setUpSongList()
+
+        //setupSingerList
+        setupSingerList()
     }
 
-
-
-
-
-
+    private fun setupSingerList() {
+        viewModel.singerImages.observe(this) { imageList ->
+            val adapter = SingerListAdapter(imageList)
+            adapter.onItemClick = { singerImage ->
+                val intent = Intent(this, SingerActivity::class.java).apply {
+                    putExtra("singer_image", singerImage)
+                }
+                startActivity(intent)
+            }
+            binding.rvSingerList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            binding.rvSingerList.adapter = adapter
+        }
+    }
     // Setup TabLayout
     private fun setupMusicTabGenre() {
         viewModel.categories.observe(this) { categories ->

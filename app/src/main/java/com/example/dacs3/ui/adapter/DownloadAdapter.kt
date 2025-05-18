@@ -1,6 +1,7 @@
 package com.example.dacs3.ui.adapter
 
 import android.app.AlertDialog
+import android.media.MediaMetadataRetriever
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.dacs3.R
 import com.example.dacs3.data.model.Music
 import com.example.dacs3.data.repository.MusicRepository
-import com.example.dacs3.ui.viewmodel.DownloadViewModel
 
 class DownloadAdapter(
     val activity: AppCompatActivity,
@@ -23,13 +22,8 @@ class DownloadAdapter(
     private val listener: OnItemClickListener
 ) : ArrayAdapter<Music>(activity, R.layout.custom_down) {
 
-    interface OnItemClickListener {
-        fun ngheNhacOffline(position: Int)
-    }
-
-    private val viewModel: DownloadViewModel = ViewModelProvider(activity)[DownloadViewModel::class.java]
     private val musicRepository = MusicRepository(activity.application)
-    
+
     override fun getCount(): Int = list.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -42,8 +36,8 @@ class DownloadAdapter(
         val song = list[position]
 
         title.text = song.songName
-        singer.text = song.singer_name ?: "Unknown Singer"
-        time.text = viewModel.getAudioDuration(song.localAudioPath)
+        singer.text = song.singer_name
+        time.text = getAudioDuration(song.localAudioPath)
 
         Glide.with(activity)
             .load(song.coverImage)
@@ -52,8 +46,6 @@ class DownloadAdapter(
             .into(images)
 
         btnDelete.setOnClickListener {
-            val song = list[position]
-
             AlertDialog.Builder(activity).apply {
                 setTitle("Xác nhận xóa")
                 setMessage("Bạn có chắc chắn muốn xóa bài hát '${song.songName}' không?")
@@ -69,7 +61,6 @@ class DownloadAdapter(
                         Toast.makeText(activity, "Không thể xóa bài hát", Toast.LENGTH_SHORT).show()
                     }
 
-                    // Load lại danh sách từ database ngay lập tức
                     list.clear()
                     list.addAll(musicRepository.getAll()?.filterNotNull() ?: emptyList())
 
@@ -79,11 +70,30 @@ class DownloadAdapter(
             }.show()
         }
 
-
         rowView.setOnClickListener {
             listener.ngheNhacOffline(position)
         }
 
         return rowView
+    }
+
+    fun getAudioDuration(audioPath: String?): String {
+        if (audioPath.isNullOrEmpty()) return "00:00"
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(audioPath)
+            val durationMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLongOrNull() ?: 0L
+            retriever.release()
+            val minutes = (durationMs / 1000) / 60
+            val seconds = (durationMs / 1000) % 60
+            String.format("%02d:%02d", minutes, seconds)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "00:00"
+        }
+    }
+
+    interface OnItemClickListener {
+        fun ngheNhacOffline(position: Int)
     }
 }

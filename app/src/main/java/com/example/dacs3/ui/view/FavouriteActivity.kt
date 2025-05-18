@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.dacs3.data.model.DataSongList
 import com.example.dacs3.databinding.ActivityFavouriteBinding
 import com.example.dacs3.ui.adapter.FavouriteAdapter
@@ -17,10 +18,8 @@ class FavouriteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavouriteBinding
     private lateinit var adapter: FavouriteAdapter
     private val viewModel: FavouriteViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityFavouriteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

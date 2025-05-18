@@ -9,100 +9,140 @@
     android:background="@drawable/background_color2"
     tools:context=".ui.view.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/search_bar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- Toolbar -->
-        <include
-            android:id="@+id/customToolbar"
-            layout="@layout/custom_toolbar"
+        <!-- ScrollView bọc ConstraintLayout -->
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- RecyclerView tìm kiếm -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rVSearch"
-            android:layout_width="0dp"
-            android:layout_height="500dp"
-            android:visibility="gone"
-            android:background="@color/blackcurrent"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/customToolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Carousel -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/carousel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/customToolbar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Danh sách phổ biến -->
-        <TextView
-            android:id="@+id/tvSongListTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Danh sách phổ biến"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="4dp"
-            app:layout_constraintTop_toBottomOf="@id/carousel"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvSongList"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="18dp"
-            app:layout_constraintTop_toBottomOf="@id/tvSongListTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabMusicGenres"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            app:tabMode="scrollable"
-            android:background="@drawable/shape_rounded_all2"
-            app:layout_constraintTop_toBottomOf="@id/rvSongList"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerGenres"
-            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toBottomOf="@id/tabMusicGenres"
-            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Toolbar -->
+                <include
+                    android:id="@+id/customToolbar"
+                    layout="@layout/custom_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- RecyclerView tìm kiếm -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rVSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="500dp"
+                    android:visibility="gone"
+                    android:background="@color/blackcurrent"
+                    android:elevation="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/customToolbar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Carousel -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/carousel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/customToolbar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Danh sách ca sĩ -->
+                <TextView
+                    android:id="@+id/tvArtistTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Danh sách ca sĩ"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/carousel"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSingerList"
+                    android:layout_width="0dp"
+                    android:layout_height="115dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvArtistTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Danh sách phổ biến -->
+                <TextView
+                    android:id="@+id/tvPopularTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Danh sách phổ biến"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp"
+                    app:layout_constraintTop_toBottomOf="@id/rvSingerList"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSongList"
+                    android:layout_width="match_parent"
+                    android:layout_height="165dp"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintTop_toBottomOf="@id/tvPopularTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- TabLayout thể loại nhạc -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabMusicGenres"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="4dp"
+                    app:tabMode="scrollable"
+                    android:background="@drawable/shape_rounded_all2"
+                    app:layout_constraintTop_toBottomOf="@id/rvSongList"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- ViewPager cho thể loại nhạc -->
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewPagerGenres"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintTop_toBottomOf="@id/tabMusicGenres"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                   />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <!-- Bottom Navigation -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/shape_rounded_all"
-            app:menu="@menu/bottom_menu"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:menu="@menu/bottom_menu" />
+    </LinearLayout>
 
     <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView

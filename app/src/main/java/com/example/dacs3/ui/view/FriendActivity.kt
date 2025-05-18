@@ -82,7 +82,7 @@ class FriendActivity : AppCompatActivity() {
 
         binding.listFollow.adapter = followAdapter
 
-        // ⚡ Thêm đoạn này để xử lý click nút unfollow
+        // Thêm đoạn này để xử lý click nút unfollow
         followAdapter.setOnFollowClickListener(object : FollowAdapter.OnFollowClickListener {
             override fun onFollowClick(position: Int) {
                 val user = followAdapter.list[position]

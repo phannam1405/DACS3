@@ -20,6 +20,7 @@ class FavouriteAdapter(
     private var itemClickListener: onItemClickListener? = null
     private var deleteClickListener: OnDeleteClickListener? = null
 
+    // ViewHolder nội bộ
     private class ViewHolder(view: View) {
         val imageView: ImageView = view.findViewById(R.id.imgMusic)
         val titleView: TextView = view.findViewById(R.id.txtTitle)
@@ -55,25 +56,15 @@ class FavouriteAdapter(
         holder.singerView.text = currentItem.singerName
         holder.timeView.text = currentItem.category
 
-        // Click toàn item
         rowView.setOnClickListener {
             itemClickListener?.onItemClick(position)
         }
 
-        // Click vào nút xoá
         holder.btnDelete.setOnClickListener {
             deleteClickListener?.onDeleteClick(position)
         }
 
         return rowView
-    }
-
-    interface onItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    interface OnDeleteClickListener {
-        fun onDeleteClick(position: Int)
     }
 
     fun setOnItemClickListener(listener: onItemClickListener) {
@@ -82,5 +73,13 @@ class FavouriteAdapter(
 
     fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
         this.deleteClickListener = listener
+    }
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    interface OnDeleteClickListener {
+        fun onDeleteClick(position: Int)
     }
 }

@@ -133,27 +133,28 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_weight="1"
                     android:src="@drawable/icon_repeat"/>
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_weight="1"
                     android:src="@drawable/icon_share"/>
                 <ImageButton
                     android:id="@+id/btnInstall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_weight="1"
                     android:src="@drawable/icon_install"/>
                 <ImageButton
                     android:id="@+id/btnPlaylist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+
                     android:layout_weight="1"
                     android:src="@drawable/icon_playlist"/>
             </LinearLayout>

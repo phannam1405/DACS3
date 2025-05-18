@@ -1,17 +1,14 @@
-package com.example.dacs3.ui.adapter
+package com.example.dacs3.ui.view
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ListView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.dacs3.R
 import com.example.dacs3.data.model.DataSongList
-import com.example.dacs3.ui.view.PlayerActivity
+import com.example.dacs3.ui.adapter.SongGerneAdapter
 import com.example.dacs3.ui.viewmodel.MainViewModel
 
 class MusicGenreFragment : Fragment(R.layout.fragment_music_genre) {

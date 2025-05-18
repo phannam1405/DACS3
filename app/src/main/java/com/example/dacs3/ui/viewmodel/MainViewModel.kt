@@ -24,6 +24,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> get() = _categories
 
+    private val _singerImages = MutableLiveData<List<String>>()
+    val singerImages: LiveData<List<String>> get() = _singerImages
+
+
     private val dbref: DatabaseReference = FirebaseDatabase.getInstance(
         "https://dacs3-7408e-default-rtdb.asia-southeast1.firebasedatabase.app"
     ).getReference("Song")
@@ -36,6 +40,33 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         layThongTinKhoNhac()
         fetchAllCategories()
+        fetchAllSinger()
+    }
+
+    fun getSongsBySingerImage(singerImage: String): LiveData<List<DataSongList>> {
+        val filteredSongs = MutableLiveData<List<DataSongList>>()
+
+        dbref.orderByChild("singerImage").equalTo(singerImage).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val songList = mutableListOf<DataSongList>()
+                if (snapshot.exists()) {
+                    for (musicSnapshot in snapshot.children) {
+                        val song = musicSnapshot.getValue(DataSongList::class.java)
+                        song?.let {
+                            it.id = musicSnapshot.key
+                            songList.add(it)
+                        }
+                    }
+                }
+                filteredSongs.postValue(songList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Error fetching songs by singer: ${error.message}")
+            }
+        })
+
+        return filteredSongs
     }
 
     private fun fetchAllCategories() {
@@ -57,6 +88,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
+
+    private fun fetchAllSinger() {
+        dbref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val singerImageSet = mutableSetOf<String>()
+                if (snapshot.exists()) {
+                    for (categorySnapshot in snapshot.children) {
+                        val imageUrl = categorySnapshot.child("singerImage")
+                            .getValue(String::class.java)
+                        imageUrl?.let { singerImageSet.add(it) } // Tự loại trùng
+                    }
+                }
+                _singerImages.postValue(singerImageSet.toList())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Firebase", "Error fetching singer images: ${error.message}")
+            }
+        })
+    }
+
+
 
     fun getSongsByCategory(category: String): LiveData<List<DataSongList>> {
         val filteredSongs = MutableLiveData<List<DataSongList>>()

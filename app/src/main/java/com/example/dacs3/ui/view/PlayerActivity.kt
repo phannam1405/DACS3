@@ -2,13 +2,24 @@ package com.example.dacs3.ui.view
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.media.audiofx.Visualizer
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.bumptech.glide.Glide
 import com.example.dacs3.R
 import com.example.dacs3.data.model.DataSongList
@@ -16,78 +27,79 @@ import com.example.dacs3.databinding.ActivityPlayerBinding
 import com.example.dacs3.ui.viewmodel.FavouriteViewModel
 import com.example.dacs3.ui.viewmodel.PlayerViewModel
 import com.example.dacs3.ui.viewmodel.PlaylistChildViewModel
+import java.net.URL
 
 class PlayerActivity : AppCompatActivity() {
-
-    // View Binding để thao tác với layout
     private lateinit var binding: ActivityPlayerBinding
-
-    // ViewModel điều khiển phát nhạc
     private val viewModel: PlayerViewModel by viewModels()
-
-    // ViewModel quản lý danh sách phát
     private val playlistViewModel: PlaylistChildViewModel by viewModels()
-
-    // ViewModel quản lý bài hát yêu thích
     private val favViewModel: FavouriteViewModel by viewModels()
-
-    // Animation xoay ảnh đĩa
     private lateinit var rotateAnimator: ObjectAnimator
 
-    // Hàm khởi tạo Activity
+    private val callReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.getStringExtra(TelephonyManager.EXTRA_STATE)) {
+                TelephonyManager.EXTRA_STATE_RINGING -> {
+                    if (viewModel.isPlaying.value == true) {
+                        viewModel.pause()
+                        binding.btnPlayPause.setIconResource(R.drawable.icon_play)
+                        rotateAnimator.pause()
+                    }
+                }
+                TelephonyManager.EXTRA_STATE_IDLE -> {
+                    if (viewModel.isPlaying.value == false && viewModel.wasPlayingBeforeCall) {
+                        viewModel.play()
+                        binding.btnPlayPause.setIconResource(R.drawable.icon_pause)
+                        rotateAnimator.resume()
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val ACTION_CLOSE = "action_close"
+        const val NOTIFICATION_ID = 101
+        const val CHANNEL_ID = "music_channel"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Khởi tạo Toolbar
         setupToolbar()
-
-        // Khởi tạo animation xoay ảnh
         setupRotationAnimator()
-
-        // Khởi tạo dữ liệu bài hát
         setupSongData()
-
-        // Khởi tạo các điều khiển phát nhạc
         setupPlayerControls()
-
-        // Khởi tạo nút tải bài hát về thiết bị
         setupDownloadButton()
-
-        // Khởi tạo nút thêm bài hát vào danh sách phát
         setupPlaylistButton()
+        createNotificationChannel()
+
+        when (intent?.action) {
+            ACTION_CLOSE -> {
+                viewModel.releaseMediaPlayer()
+                removeNotification()
+                finish()
+            }
+        }
 
         val songsList = intent.getSerializableExtra("song_list") as? ArrayList<DataSongList>
         val currentSong = intent.getSerializableExtra("song") as? DataSongList
 
-
         if (songsList != null && currentSong != null) {
-            // Lưu danh sách vào ViewModel
             viewModel.setSongsList(songsList)
-
-            // Tìm vị trí bài hát hiện tại trong danh sách
             val currentIndex = songsList.indexOfFirst { it.id == currentSong.id }
             viewModel.setCurrentSongIndex(currentIndex)
-
-            // Phát bài hát
             playSong(currentSong)
         }
 
+        val filter = IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED)
+        registerReceiver(callReceiver, filter)
 
-        if (songsList != null) {
-            viewModel.setSongsList(songsList)
-            val currentSong = intent.getSerializableExtra("song") as? DataSongList
-            val currentIndex = songsList.indexOfFirst { it.id == currentSong?.id }
-            if (currentIndex != -1) {
-                viewModel.setCurrentSongIndex(currentIndex)
-            }
-        }
+        viewModel.setupAudioFocus()
     }
 
-
-
-    // Xử lý nút trở về trong Toolbar
     private fun setupToolbar() {
         binding.toolbarInclude.btnReturn.setOnClickListener {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -95,12 +107,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
-    // Thiết lập animation xoay cho ảnh bài hát
     private fun setupRotationAnimator() {
         rotateAnimator = ObjectAnimator.ofFloat(binding.imgSong, View.ROTATION, 0f, 360f).apply {
             duration = 4000L
@@ -109,9 +115,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-
-
-    // Hàm khởi tạo dữ liệu bài hát
     private fun setupSongData() {
         val imageSong = intent.getStringExtra("image")
         val audio = intent.getStringExtra("audio")
@@ -120,7 +123,6 @@ class PlayerActivity : AppCompatActivity() {
         binding.songName.text = name
         Glide.with(this).load(imageSong).into(binding.imgSong)
 
-        // Xử lý trạng thái yêu thích
         songId?.let { id ->
             favViewModel.isSongFavourite(id) { isFav ->
                 var isCurrentlyFav = isFav
@@ -135,15 +137,12 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         viewModel.prepareMediaPlayer(audio)
+        if (intent?.getBooleanExtra("EXIT", false) == true) {
+            finish()
+            return
+        }
     }
 
-
-
-
-
-
-
-    // Hàm xử lý các nút tương tác với các button trong player
     private fun setupPlayerControls() {
         viewModel.duration.observe(this) { duration ->
             binding.seekBar.max = duration
@@ -171,15 +170,14 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnNextSong.setOnClickListener{
+        binding.btnNextSong.setOnClickListener {
             playNextSong()
         }
 
-        binding.btnPreSong.setOnClickListener{
+        binding.btnPreSong.setOnClickListener {
             playPreviousSong()
         }
 
-        // Xử lý kéo SeekBar để tua nhạc
         binding.seekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) viewModel.seekTo(progress)
@@ -190,12 +188,6 @@ class PlayerActivity : AppCompatActivity() {
         })
     }
 
-
-
-
-
-
-    // Hàm xử lý nút tải bài hát về thiết bị
     private fun setupDownloadButton() {
         val song = intent.getSerializableExtra("song") as? DataSongList
 
@@ -213,12 +205,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
-    // Hàm khởi tạo nút thêm bài hát vào danh sách phát
     private fun setupPlaylistButton() {
         val song = intent.getSerializableExtra("song") as? DataSongList
 
@@ -230,58 +216,41 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-   //Hàm cập nhật biểu tượng yêu thích dựa trên trạng thái yêu thích
     private fun updateHeartIcon(isFav: Boolean) {
         val iconRes = if (isFav) R.drawable.heart_fill_svgrepo_com else R.drawable.icon_heart
         binding.toolbarInclude.btnHeart.setImageResource(iconRes)
     }
 
-
-
-
-    // Hàm định dạng thơ gian của bài hát
     private fun formatTime(millis: Int): String {
         val minutes = (millis / 1000) / 60
         val seconds = (millis / 1000) % 60
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-
-    // Hàm nhảy qua bài hát kế tiếp
     private fun playNextSong() {
         val songs = viewModel.getSongsList()
         if (songs.isEmpty()) return
 
         val nextIndex = (viewModel.getCurrentSongIndex() + 1) % songs.size
-
-
         playSong(songs[nextIndex])
         viewModel.setCurrentSongIndex(nextIndex)
     }
 
-    // Hàm nhảy qua bài hát trước đó
     private fun playPreviousSong() {
         val songs = viewModel.getSongsList()
         if (songs.isEmpty()) return
 
         val prevIndex = (viewModel.getCurrentSongIndex() - 1 + songs.size) % songs.size
-
-
         playSong(songs[prevIndex])
         viewModel.setCurrentSongIndex(prevIndex)
     }
 
-
-    // Hàm chơi nhạc sau khi nhảy bài hát
     private fun playSong(song: DataSongList) {
         viewModel.releaseMediaPlayer()
         binding.songName.text = song.songName
         Glide.with(this).load(song.image).into(binding.imgSong)
         rotateAnimator.pause()
-        // Cập nhật trạng thái yêu thích
+
         song.id?.let { id ->
             favViewModel.isSongFavourite(id) { isFav ->
                 updateHeartIcon(isFav)
@@ -293,14 +262,79 @@ class PlayerActivity : AppCompatActivity() {
         }
         viewModel.prepareMediaPlayer(song.audio)
         viewModel.play()
+        showNotification(song)
     }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Trình phát nhạc",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Điều khiển phát nhạc"
+                setSound(null, null)
+            }
 
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
+    private fun showNotification(song: DataSongList) {
+        val closeIntent = Intent(this, NotificationReceiver::class.java).apply {
+            action = ACTION_CLOSE
+        }
 
+        val pendingClose = PendingIntent.getBroadcast(
+            this, 4, closeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(song.songName ?: "Bài hát không xác định")
+            .setContentText(song.singerName ?: "Nghệ sĩ không xác định")
+            .setSmallIcon(R.drawable.logo_app)
+            .setLargeIcon(getBitmapFromUrl(song.image))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
+            .setOngoing(true)
+            .addAction(R.drawable.icon_logout, "Đóng", pendingClose)
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()// Hiển thị action đầu tiên (index 0) ở chế độ compact
+                .setShowActionsInCompactView(0)
+            )
+            .build()
+
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(NOTIFICATION_ID, notification)
+    }
+
+    private fun getBitmapFromUrl(url: String?): Bitmap? {
+        if (url.isNullOrEmpty()) return null
+        return try {
+            val inputStream = URL(url).openStream()
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun removeNotification() {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(NOTIFICATION_ID)
+    }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.releaseMediaPlayer()
+        try {
+            unregisterReceiver(callReceiver)
+        } catch (e: IllegalArgumentException) {
+        }
+
+        if (!isChangingConfigurations) {
+            viewModel.releaseMediaPlayer()
+            removeNotification()
+        }
     }
 }
